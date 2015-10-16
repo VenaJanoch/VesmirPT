@@ -12,6 +12,7 @@ public class Planeta {
 
 	
 	public Planeta(String nazev, int pocetObyvatel, Point poloha) {
+	
 		setNazev(nazev);
 		setPocetObyvatel(pocetObyvatel);
 		setPoloha(poloha);

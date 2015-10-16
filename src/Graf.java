@@ -7,6 +7,7 @@ public class Graf {
 	private int velikost;
 
 	public Graf(ArrayList<Planeta> vrcholy) {
+		
 		setVrcholy(vrcholy);
 		setVelikost(vrcholy.size());
 		setMatice(new int[velikost][velikost]);

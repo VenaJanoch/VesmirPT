@@ -9,5 +9,6 @@ public class Vesmir {
 													100000, 10000000, 800,800);
 		Graf g = new Graf(o.getPlanety());
 		
+		
 	}
 }

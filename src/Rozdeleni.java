@@ -141,7 +141,6 @@ public class Rozdeleni {
 		int pocetPlanet = 0;
 		Random r = new Random();
 		Point pozice = new Point(0, 0);
-		
 
 		while(pocetPlanet != getPocetPlanetCelkem()){
 			 

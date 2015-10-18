@@ -18,8 +18,10 @@ public class Planeta {
 		setPoloha(poloha);
 	
 	}
+	
+	
 
-
+	
 	public String getNazev() {
 		return nazev;
 	}

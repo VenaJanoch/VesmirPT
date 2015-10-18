@@ -5,6 +5,7 @@ public class Graf {
 	private ArrayList<Planeta> vrcholy;
 	private int matice[][];
 	private int velikost;
+	private int maticeVzdalenosti[][];
 
 	public Graf(ArrayList<Planeta> vrcholy) {
 		
@@ -12,53 +13,75 @@ public class Graf {
 		setVelikost(vrcholy.size());
 		setMatice(new int[velikost][velikost]);
 		
-		for (int i = 0; i < velikost; i++) {
+		najdiVzdalenosti();
 			
-			najdiSousedy(vrcholy.get(i));
-			
-		}
+		najdiSousedy();		
 		
+		SaveLoad sl = new SaveLoad();
+		sl.ulozGraf(matice, "MaticeGrafu.txt");
+		/*
+		System.out.println(vrcholy.get(4999).getPartneri().get(0).getNazev());
+		System.out.println(vrcholy.get(4999).getPartneri().get(1).getNazev());
+		System.out.println(vrcholy.get(4999).getPartneri().get(2).getNazev());
+		System.out.println(vrcholy.get(4999).getPartneri().get(3).getNazev());
+		System.out.println(vrcholy.get(4999).getPartneri().get(4).getNazev());
+		
+		vypisMatici(maticeVzdalenosti);
+		System.out.println();
+		vypisMatici(matice);	  
+	 */
+	}
+	
+	public void najdiVzdalenosti(){
+		maticeVzdalenosti = new int[velikost][velikost];
+		
+		for (int i = 0; i < vrcholy.size(); i++) {
+			for (int j = 0; j < vrcholy.size(); j++) {
+				maticeVzdalenosti[i][j] = (int)(vrcholy.get(i).getPoloha().distance(vrcholy.get(j).getPoloha()));
+				
+			}
+		}
 	}
 
-	void najdiSousedy(Planeta p){
-	
-		int z = 5;
+	public void najdiSousedy(){
+
 		ArrayList<Planeta> pom = new ArrayList<Planeta>();
-		while (pom.size() != 5) {
+		
+		int pomVzdalenost = -1;
+		int vzdalenost = 1000;
+		int pomIndexX = -1;
+		int pomIndexY = -1;
+		int z = 0;
+		
+		for (int i = 0; i < velikost; i++) {
 			
+		while (z != 5) {
 			
-			for (int i = 0; i < velikost; i++) {
-				
-				int vzdalenost = (int)(p.getPoloha().distance(vrcholy.get(i).getPoloha()));
-				
-				
-				if (vzdalenost > 0 && vzdalenost < z && (pom.contains(vrcholy.get(i)) != true) && pom.size() != 5) {
-					pom.add((vrcholy.get(i)));
-					vlozHranu(p, vrcholy.get(i), vzdalenost);
+				for (int j = 0; j < maticeVzdalenosti.length; j++) {
+					pomVzdalenost = maticeVzdalenosti[i][j]; 
+						if (pomVzdalenost < vzdalenost && pomVzdalenost > 0) {
+							vzdalenost = pomVzdalenost;
+							pomIndexX = i;
+							pomIndexY = j;
+						}
+						
 				}
-			
+				maticeVzdalenosti[pomIndexX][pomIndexY] = 1000;
+				pom.add(vrcholy.get(pomIndexY));
+				vlozHranu(vzdalenost, i, pomIndexY);
+				vrcholy.get(i).setPartneri(pom);
+				vzdalenost = 1000;
+				z++;
 			}
-			
-			z *=2; 
-			
+		z = 0; 
 		}
-		p.setPartneri(pom);
 	}
 	
 	
-	void vlozHranu(Planeta odkud, Planeta kam, int hodnota) {
+	void vlozHranu(int hodnota, int indexX, int indexY) {
 
-		for (int i = 0; i < velikost; i++) {
-			if (vrcholy.get(i).getNazev().equals(odkud.getNazev())) {
-
-				for (int j = 0; j < velikost; j++) {
-					if (vrcholy.get(i).getNazev().equals(odkud.getNazev())) {
-						matice[i][j] = hodnota;
-						matice[j][i] = hodnota;
-					}
-				}
-			}
-		}
+						matice[indexX][indexY] = hodnota;
+						matice[indexY][indexY] = hodnota;
 	}
 	
 	
@@ -85,5 +108,13 @@ public class Graf {
 
 	public void setVelikost(int velikost) {
 		this.velikost = velikost;
+	}
+
+	public int[][] getMaticeVzdalenosti() {
+		return maticeVzdalenosti;
+	}
+
+	public void setMaticeVzdalenosti(int maticeVzdalenosti[][]) {
+		this.maticeVzdalenosti = maticeVzdalenosti;
 	}
 }

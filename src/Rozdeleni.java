@@ -6,8 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 public class Rozdeleni {
 
@@ -25,14 +28,24 @@ public class Rozdeleni {
 	private static PrintWriter pw;
 	private static Scanner sc;
 
+	private int []centrala0;
+	private int []centrala1;
+	private int []centrala2;
+	private int []centrala3;
+	private int []centrala4;
+	
+	private Dijkstra dijsktra;
+
 	public Rozdeleni(String souborPlaneta, String souborCentrala) {
+		
 		this.planety = new ArrayList<Planeta>();
+		this.dijsktra = new Dijkstra();
+
 		nactiCentraly(souborCentrala);
 		
 		nactiPlanety(souborPlaneta);
-	
 		
-
+	
 	}
 
 	public Rozdeleni(int pocetPlanet, int prumer, double odchylka, int pocetCentral, int dolniMez, int horniMez,
@@ -171,8 +184,7 @@ public class Rozdeleni {
 				double x = Double.valueOf(parametry[1]);
 				double y = Double.valueOf(parametry[2]);
 				Point pomPoloha = new Point((int) (x), (int) (y));
-
-				planety.add(new Planeta(parametry[0], Integer.valueOf(parametry[3]), pomPoloha));
+				planety.add(new Planeta(parametry[0], Integer.parseInt(parametry[3]), pomPoloha));
 				pomPocetPlanet++;
 			}
 			setPocetPlanetCelkem(pomPocetPlanet);
@@ -219,6 +231,50 @@ public class Rozdeleni {
 		}
 	}
 
+	public void najdiCentralu(Graf graf){
+		
+		try {
+			centrala0 = dijsktra.dijkstra_function(graf,0);
+			centrala1 = dijsktra.dijkstra_function(graf,1);
+			centrala2 = dijsktra.dijkstra_function(graf,2);
+			centrala3 = dijsktra.dijkstra_function(graf,3);
+			centrala4 = dijsktra.dijkstra_function(graf,4);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int pom = 0;
+		for (int i = 5; i < planety.size(); i++) {
+						
+			
+			if (centrala0[i] < centrala1[i] && centrala0[i] < centrala2[i] && centrala0[i] < centrala3[i] && centrala0[i] < centrala4[i]) {
+				
+				planety.get(i).setCentrala("0");
+				planety.get(i).setVzdalenostOdcentraly(centrala0[i]);
+			
+			}else if (centrala1[i] < centrala0[i] && centrala1[i] < centrala2[i] && centrala1[i] < centrala3[i] && centrala1[i] < centrala4[i]) {
+				
+				planety.get(i).setCentrala("1");
+				planety.get(i).setVzdalenostOdcentraly(centrala1[i]);
+			
+			}else if (centrala2[i] < centrala0[i] && centrala2[i] < centrala1[i] && centrala2[i] < centrala3[i] && centrala2[i] < centrala4[i]) {
+			
+				planety.get(i).setCentrala("2");
+				planety.get(i).setVzdalenostOdcentraly(centrala2[i]);
+			
+			}else if (centrala3[i] < centrala0[i] && centrala3[i] < centrala1[i] && centrala3[i] < centrala2[i] && centrala3[i] < centrala4[i]) {
+			
+				planety.get(i).setCentrala("3");
+				planety.get(i).setVzdalenostOdcentraly(centrala3[i]);
+			
+			}else if (centrala4[i] < centrala0[i] && centrala4[i] < centrala1[i] && centrala4[i] < centrala2[i] && centrala4[i] < centrala3[i]) {
+			
+				planety.get(i).setCentrala("4");
+				planety.get(i).setVzdalenostOdcentraly(centrala4[i]);
+			}
+		}
+		
+	}
 	public int getVelikostVesmiruY() {
 		return velikostVesmiruY;
 	}

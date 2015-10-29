@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.Scanner;
 
 public class Vesmir {
@@ -7,6 +8,7 @@ public class Vesmir {
 	private static String souborCentrala;
 	private static Rozdeleni r;
 	private static Graf g;
+	private static Logistika l;
 	
 	public static int behProgramu(String args[]) {
 		
@@ -42,7 +44,9 @@ public class Vesmir {
 		
 		r = new Rozdeleni(souborPlaneta, souborCentrala);
 		g = new Graf(souborMatice, r.getPlanety());
-		
+		r.setPlanety(g.getVrcholy());
+
+		r.najdiCentralu(g);
 		
 
 	}
@@ -69,8 +73,33 @@ public class Vesmir {
 		}else {
 			ulozData(args);
 		}
-
+		l = new Logistika(r.getPlanety(), g);
+		int i = 0;
 		
+		l.setDen(0);
+	/*	
+		while (i != 359) {
+			
+			
+			
+			i++;
+		}
+	*/
+		l.vypisStav(new File("vystup.txt"));
+	}
+
+	/**
+	 * @return the l
+	 */
+	public static Logistika getL() {
+		return l;
+	}
+
+	/**
+	 * @param l the l to set
+	 */
+	public static void setL(Logistika l) {
+		Vesmir.l = l;
 	}
 
 }

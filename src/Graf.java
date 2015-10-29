@@ -14,6 +14,9 @@ public class Graf {
 	private int matice[][];
 	private int velikost;
 	private int maticeVzdalenosti[][];
+	private int next[];
+	 public int current_edge_weight;
+	  
 	private Scanner sc;
 
 	public Graf(String souborMatice, ArrayList<Planeta> vrcholy) {
@@ -26,6 +29,9 @@ public class Graf {
 		najdiVzdalenosti();
 		najdiSousedy();
 		
+		//ulozGraf();
+		
+		next = new int[velikost];
 	}
 
 	public Graf(ArrayList<Planeta> vrcholy) {
@@ -34,6 +40,7 @@ public class Graf {
 		setVelikost(vrcholy.size());
 		setMatice(new int[velikost][velikost]);
 		maticeVzdalenosti = new int[velikost][velikost];
+	      
 
 		najdiVzdalenosti();
 
@@ -49,6 +56,32 @@ public class Graf {
 			}
 		}
 	}
+
+	 public int edgeLength (int row, int col) {
+	      return matice[row][col];
+	   } 
+	 
+	 public int nextneighbor(int v) {
+	      next[v] = next[v] + 1; 				
+
+	      if(next[v] < velikost){
+	      	while(matice[v][next[v]] == 0 && next[v] < getVelikost()) {
+	            next[v] = next[v] + 1;                        
+
+	            if(next[v] == getVelikost())
+	         	   break;
+	         }
+	     }
+
+	      if(next[v] >= velikost) {
+	         next[v] = -1;                                    
+	         current_edge_weight = -1;
+	      }
+	      else 
+	         current_edge_weight = matice[v][next[v]];
+
+	      return next[v];      				
+	   } 
 
 	public void najdiSousedy() {
 
@@ -95,6 +128,7 @@ public class Graf {
 			String[] parametry;
 			int velikost;
 			int radek = 0;
+			
 			while (sc.hasNextLine()) {
 
 				pomString = sc.nextLine();

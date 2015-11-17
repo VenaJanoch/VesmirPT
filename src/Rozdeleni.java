@@ -28,26 +28,42 @@ public class Rozdeleni {
 	private static PrintWriter pw;
 	private static Scanner sc;
 
-	private int []centrala0;
-	private int []centrala1;
-	private int []centrala2;
-	private int []centrala3;
-	private int []centrala4;
+	private int[] centrala0;
+	private int[] centrala1;
+	private int[] centrala2;
+	private int[] centrala3;
+	private int[] centrala4;
 	
-	private Dijkstra dijsktra;
+	private Dijkstra2 dijkstra;
 
+	private ArrayList<Cesty> cesty = new ArrayList<Cesty>();
+/**
+ * Konstruktor pro praci uz s vygenerovanym vesmirem
+ * @param souborPlaneta
+ * @param souborCentrala
+ */
 	public Rozdeleni(String souborPlaneta, String souborCentrala) {
-		
+
 		this.planety = new ArrayList<Planeta>();
-		this.dijsktra = new Dijkstra();
 
 		nactiCentraly(souborCentrala);
-		
+
 		nactiPlanety(souborPlaneta);
 		
-	
-	}
+		
 
+	}
+/**
+ * Konstruktor pro vygenerovani vesmiru
+ * @param pocetPlanet
+ * @param prumer
+ * @param odchylka
+ * @param pocetCentral
+ * @param dolniMez
+ * @param horniMez
+ * @param velikstVesmiruX
+ * @param velikostVesmiruY
+ */
 	public Rozdeleni(int pocetPlanet, int prumer, double odchylka, int pocetCentral, int dolniMez, int horniMez,
 			int velikstVesmiruX, int velikostVesmiruY) {
 
@@ -63,7 +79,9 @@ public class Rozdeleni {
 
 		prirazeniObyvatel();
 	}
-
+/**
+ * Rozdeleni obyvatel na planety a umisteni planet do vesmiru
+ */
 	public void prirazeniObyvatel() {
 		int pocetPlanet = 0;
 		Random r = new Random();
@@ -73,10 +91,9 @@ public class Rozdeleni {
 
 		while (pocetPlanet != getPocetPlanetCelkem()) {
 
-			pocetObyvatel = (int) (getPrumer() * (getOdchylka() * r.nextGaussian()));
+			pocetObyvatel = getPrumer() + ((int) (getPrumer()  * r.nextGaussian()));
 
 			if (pocetObyvatel > getDolniMez() && pocetObyvatel < getHorniMez()) {
-
 				setNazev(String.valueOf(pocetPlanet + pocetCentral));
 
 				pozice = new Point(r.nextInt(getVelikostVesmiruX()), r.nextInt(getVelikostVesmiruY()));
@@ -94,7 +111,9 @@ public class Rozdeleni {
 
 		}
 	}
-
+/**
+ * vytvori centraly na zadane souradnice
+ */
 	public void centraly() {
 		double PrvniX = velikostVesmiruX * 0.25;
 		double PrvniY = velikostVesmiruY * 0.25;
@@ -112,7 +131,10 @@ public class Rozdeleni {
 			planety.add(new Planeta(String.valueOf(i), 0, pozice[i]));
 		}
 	}
-
+/**
+ * Vypise centraly do souboru
+ * @param nazevSouboru
+ */
 	public void vypisCentraly(String nazevSouboru) {
 
 		try {
@@ -136,7 +158,10 @@ public class Rozdeleni {
 		}
 
 	}
-
+/**
+ * vypise planety od souboru
+ * @param nazevSouboru
+ */
 	public void vypisPlanety(String nazevSouboru) {
 
 		try {
@@ -160,8 +185,10 @@ public class Rozdeleni {
 		}
 
 	}
-
-
+/**
+ * Nacte planety ze souboru
+ * @param nazevSouboru
+ */
 	public void nactiPlanety(String nazevSouboru) {
 		try {
 			sc = new Scanner(new File(nazevSouboru));
@@ -195,7 +222,10 @@ public class Rozdeleni {
 			System.exit(1);
 		}
 	}
-
+/**
+ * nacte centraly ze souboru
+ * @param nazevSouboru
+ */
 	public void nactiCentraly(String nazevSouboru) {
 		try {
 			sc = new Scanner(new File(nazevSouboru));
@@ -230,51 +260,77 @@ public class Rozdeleni {
 			System.exit(1);
 		}
 	}
-
-	public void najdiCentralu(Graf graf){
+/**
+ * najde cesty v grafu;
+ * @param d
+ */
+	public void najdiCesty(Dijkstra2 d){
+		dijkstra = d;
 		
-		try {
-			centrala0 = dijsktra.dijkstra_function(graf,0);
-			centrala1 = dijsktra.dijkstra_function(graf,1);
-			centrala2 = dijsktra.dijkstra_function(graf,2);
-			centrala3 = dijsktra.dijkstra_function(graf,3);
-			centrala4 = dijsktra.dijkstra_function(graf,4);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	    for (int i = 0; i < 5; i++) {
+				cesty.add(new Cesty(d.dijkstra(i)));
+			
+	    	
 		}
-		int pom = 0;
-		for (int i = 5; i < planety.size(); i++) {
-						
-			
-			if (centrala0[i] < centrala1[i] && centrala0[i] < centrala2[i] && centrala0[i] < centrala3[i] && centrala0[i] < centrala4[i]) {
-				
-				planety.get(i).setCentrala("0");
-				planety.get(i).setVzdalenostOdcentraly(centrala0[i]);
-			
-			}else if (centrala1[i] < centrala0[i] && centrala1[i] < centrala2[i] && centrala1[i] < centrala3[i] && centrala1[i] < centrala4[i]) {
-				
-				planety.get(i).setCentrala("1");
-				planety.get(i).setVzdalenostOdcentraly(centrala1[i]);
-			
-			}else if (centrala2[i] < centrala0[i] && centrala2[i] < centrala1[i] && centrala2[i] < centrala3[i] && centrala2[i] < centrala4[i]) {
-			
-				planety.get(i).setCentrala("2");
-				planety.get(i).setVzdalenostOdcentraly(centrala2[i]);
-			
-			}else if (centrala3[i] < centrala0[i] && centrala3[i] < centrala1[i] && centrala3[i] < centrala2[i] && centrala3[i] < centrala4[i]) {
-			
-				planety.get(i).setCentrala("3");
-				planety.get(i).setVzdalenostOdcentraly(centrala3[i]);
-			
-			}else if (centrala4[i] < centrala0[i] && centrala4[i] < centrala1[i] && centrala4[i] < centrala2[i] && centrala4[i] < centrala3[i]) {
-			
-				planety.get(i).setCentrala("4");
-				planety.get(i).setVzdalenostOdcentraly(centrala4[i]);
-			}
-		}
+	    
+	    najdiCentralu();
 		
 	}
+	/**
+	 * Najde kazde planete jednu nejblizsi centralu
+	 * 
+	 */
+	public void najdiCentralu() {
+
+			centrala0 = cesty.get(0).getCesty();
+			centrala1 = cesty.get(1).getCesty();
+			centrala2 = cesty.get(2).getCesty();
+			centrala3 = cesty.get(3).getCesty();
+			centrala4 = cesty.get(4).getCesty();
+			
+		for (int i = 5; i < planety.size(); i++) {
+
+			if (centrala0[i] < centrala1[i] && centrala0[i] < centrala2[i] && centrala0[i] < centrala3[i]
+					&& centrala0[i] < centrala4[i]) {
+
+				planety.get(i).setCentrala("0");
+				planety.get(i).setVzdalenostOdcentraly(centrala0[i]);
+
+			} else if (centrala1[i] < centrala0[i] && centrala1[i] < centrala2[i] && centrala1[i] < centrala3[i]
+					&& centrala1[i] < centrala4[i]) {
+
+				planety.get(i).setCentrala("1");
+				planety.get(i).setVzdalenostOdcentraly(centrala1[i]);
+
+			} else if (centrala2[i] < centrala0[i] && centrala2[i] < centrala1[i] && centrala2[i] < centrala3[i]
+					&& centrala2[i] < centrala4[i]) {
+
+				planety.get(i).setCentrala("2");
+				planety.get(i).setVzdalenostOdcentraly(centrala2[i]);
+
+			} else if (centrala3[i] < centrala0[i] && centrala3[i] < centrala1[i] && centrala3[i] < centrala2[i]
+					&& centrala3[i] < centrala4[i]) {
+
+				planety.get(i).setCentrala("3");
+				planety.get(i).setVzdalenostOdcentraly(centrala3[i]);
+
+			} else if (centrala4[i] < centrala0[i] && centrala4[i] < centrala1[i] && centrala4[i] < centrala2[i]
+					&& centrala4[i] < centrala3[i]) {
+
+				planety.get(i).setCentrala("4");
+				planety.get(i).setVzdalenostOdcentraly(centrala4[i]);
+			}else {
+				planety.get(i).setCentrala("4");
+				planety.get(i).setVzdalenostOdcentraly(centrala2[i]);
+				
+			}
+		}
+
+	}
+
+	
+	/***************     Getry a setry    **************/
+	
 	public int getVelikostVesmiruY() {
 		return velikostVesmiruY;
 	}

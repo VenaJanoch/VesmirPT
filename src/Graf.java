@@ -14,9 +14,9 @@ public class Graf {
 	private int matice[][];
 	private int velikost;
 	private int maticeVzdalenosti[][];
-	private int next[];
-	 public int current_edge_weight;
-	  
+	private int dalsi[];
+	private int ohodnocenaHrana;
+
 	private Scanner sc;
 
 	public Graf(String souborMatice, ArrayList<Planeta> vrcholy) {
@@ -28,10 +28,10 @@ public class Graf {
 		nactiGraf(souborMatice);
 		najdiVzdalenosti();
 		najdiSousedy();
-		
-		//ulozGraf();
-		
-		next = new int[velikost];
+
+		// ulozGraf();
+
+		dalsi = new int[velikost];
 	}
 
 	public Graf(ArrayList<Planeta> vrcholy) {
@@ -40,7 +40,6 @@ public class Graf {
 		setVelikost(vrcholy.size());
 		setMatice(new int[velikost][velikost]);
 		maticeVzdalenosti = new int[velikost][velikost];
-	      
 
 		najdiVzdalenosti();
 
@@ -57,32 +56,37 @@ public class Graf {
 		}
 	}
 
-	 public int edgeLength (int row, int col) {
-	      return matice[row][col];
-	   } 
+	public int delkaHrany(int i, int j) {
+		return matice[i][j];
+	}
+
+	/**
+	 * Najde sousedni vrcholy 
+	 * @param i vrchol pro prohledani sousedu
+	 * @return pole sousedu 
+	 */
+	  public int[] sousedi(int i){
 	 
-	 public int nextneighbor(int v) {
-	      next[v] = next[v] + 1; 				
+		int[] sousedi;
+		
+		ArrayList<Integer> list= new ArrayList<Integer>();
+		for (int j = 0; j < vrcholy.size(); j++) {
+			if (matice[i][j] != 0) {
+				list.add(j);
+			}
+		}
+		sousedi = new int[list.size()];
+		for (int j = 0; j < sousedi.length; j++) {
+			sousedi[j] = list.get(j);
+		}
+		
+		return sousedi;
+		
+	}
 
-	      if(next[v] < velikost){
-	      	while(matice[v][next[v]] == 0 && next[v] < getVelikost()) {
-	            next[v] = next[v] + 1;                        
-
-	            if(next[v] == getVelikost())
-	         	   break;
-	         }
-	     }
-
-	      if(next[v] >= velikost) {
-	         next[v] = -1;                                    
-	         current_edge_weight = -1;
-	      }
-	      else 
-	         current_edge_weight = matice[v][next[v]];
-
-	      return next[v];      				
-	   } 
-
+	  /**
+	   * Najde pet nejblizsich sousedu pro vytvoreni hrafu
+	   */
 	public void najdiSousedy() {
 
 		int pomVzdalenost = -1;
@@ -119,6 +123,10 @@ public class Graf {
 
 	}
 
+	/**
+	 * 
+	 * @param nazevSouboru
+	 */
 	public void nactiGraf(String nazevSouboru) {
 		File f = new File(nazevSouboru);
 		try {
@@ -128,7 +136,7 @@ public class Graf {
 			String[] parametry;
 			int velikost;
 			int radek = 0;
-			
+
 			while (sc.hasNextLine()) {
 
 				pomString = sc.nextLine();
@@ -139,7 +147,7 @@ public class Graf {
 
 				parametry = pomString.split(",");
 
-						vlozHranu(Integer.valueOf(parametry[0]), Integer.valueOf(parametry[1]), Integer.valueOf(parametry[2]));
+				vlozHranu(Integer.valueOf(parametry[0]), Integer.valueOf(parametry[1]), Integer.valueOf(parametry[2]));
 
 			}
 		} catch (FileNotFoundException e) {
@@ -175,7 +183,9 @@ public class Graf {
 		}
 
 	}
-
+/**
+ * vypise graf do konzole
+ */
 	public void ulozGraf() {
 		for (int i = 0; i < matice.length; i++) {
 			for (int j = 0; j < matice.length; j++) {
@@ -190,12 +200,24 @@ public class Graf {
 
 	}
 
+	/**
+	 * Vlozi hrany do grafu z jedneho vrcholu do druheho
+	 * 
+	 * @param hodnota
+	 * @param indexX
+	 * @param indexY
+	 */
 	void vlozHranu(int hodnota, int indexX, int indexY) {
 
 		matice[indexX][indexY] = hodnota;
 		matice[indexY][indexX] = hodnota;
 	}
 
+	/***                           Getry a setry                               */
+	/*****************************************
+	 * 
+	 * @return
+	 */
 	public ArrayList<Planeta> getVrcholy() {
 		return vrcholy;
 	}

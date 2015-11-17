@@ -3,33 +3,18 @@ import java.awt.Point;
 public class Objednavka {
 
 	private int pocetLeku;
-	private Point pozice;
+	private String centrala;
 	private String idPlanety;
-	
-	public Objednavka(int pocetLeku){ //, Point pozice, String jmeno) {
+	private int dobaLetu;
+
+	public Objednavka(int pocetLeku , String centrala, String jmeno, int dobaLetu) {
 		setPocetLeku(pocetLeku);
-		//setPozice(pozice);
-		//setIdPlanety(jmeno);
+		setCentrala(centrala);
+		setIdPlanety(jmeno);
+		setDobaLetu(dobaLetu);
 	}
 
-
-
-	/**
-	 * @return the pozice
-	 */
-	public Point getPozice() {
-		return pozice;
-	}
-
-	/**
-	 * @param pozice the pozice to set
-	 */
-	public void setPozice(Point pozice) {
-		this.pozice = pozice;
-	}
-
-
-
+	
 	/**
 	 * @return the pocetLeku
 	 */
@@ -37,16 +22,13 @@ public class Objednavka {
 		return pocetLeku;
 	}
 
-
-
 	/**
-	 * @param pocetLeku the pocetLeku to set
+	 * @param pocetLeku
+	 *            the pocetLeku to set
 	 */
 	public void setPocetLeku(int pocetLeku) {
 		this.pocetLeku = pocetLeku;
 	}
-
-
 
 	/**
 	 * @return the idPlanety
@@ -55,12 +37,41 @@ public class Objednavka {
 		return idPlanety;
 	}
 
-
-
 	/**
-	 * @param idPlanety the idPlanety to set
+	 * @param idPlanety
+	 *            the idPlanety to set
 	 */
 	public void setIdPlanety(String idPlanety) {
 		this.idPlanety = idPlanety;
+	}
+
+	/**
+	 * @return the centrala
+	 */
+	public String getCentrala() {
+		return centrala;
+	}
+
+	/**
+	 * @param centrala the centrala to set
+	 */
+	public void setCentrala(String centrala) {
+		this.centrala = centrala;
+	}
+
+
+	/**
+	 * @return the dobaLetu
+	 */
+	public int getDobaLetu() {
+		return dobaLetu;
+	}
+
+
+	/**
+	 * @param dobaLetu the dobaLetu to set
+	 */
+	public void setDobaLetu(int dobaLetu) {
+		this.dobaLetu = dobaLetu;
 	}
 }

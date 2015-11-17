@@ -8,105 +8,76 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class Logistika {
-	
-	private int den = 0; 
+
+	private int den = 0;
 	private Objednavka obj;
 	private ArrayList<Planeta> planety;
 	private ArrayList<Objednavka> objednavky;
-	private Random r = new Random();
-	private int[] pomPole;
 	private Graf graf;
 
-	
-	
-	
-	
-	
-	
 	public Logistika(ArrayList<Planeta> planety, Graf g) {
-	
 
 		this.planety = planety;
 		this.objednavky = new ArrayList<Objednavka>();
 		this.graf = g;
 		
 		if (getDen() % 30 == 0) {
-			vytvorObjednavky();
+			prijmiObjednavky();
 		}
 		
 		
-		
+
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param start
 	 */
-	public void naplanujCestu(int start){
-	
+	public void naplanujCestu(int start) {
+
 	}
-	
+
 	/**
 	 * 
 	 */
-	public void vypravLod(){
-		
+	public void vypravLod() {
+
 	}
-	/**
-	 * 
-	 * @param vzdalenostOdcentraly
-	 * @return
-	 */
-	public double spoctiCasLetu(double vzdalenostOdcentraly){
-		return vzdalenostOdcentraly/25.0;
-	}
-	
-	/**
-	 * 
-	 */
-	public void vytvorObjednavky(){
-		double pocetBaleni = 0;
-		
-		for (int i = 5; i < planety.size(); i++) {
-			pocetBaleni = (double)(planety.get(i).getPocetObyvatel()) *(double)((double)(100-vlastniVyroba())/100.0);
-			System.out.println(pocetBaleni);
-			planety.get(i).setObjednavka(new Objednavka((int)pocetBaleni));
-			planety.get(i).setDobaLetu(spoctiCasLetu(planety.get(i).getVzdalenostOdcentraly()));//(new Objednavka((int)pocetBaleni, planety.get(i).getPoloha(),planety.get(i).getNazev() ));
-		}
-		
-		
-	}
-	
-	
-	
-	public int vlastniVyroba(){
-		int procenta = r.nextInt(60) + 20;
-		return procenta;
-		
-	}
+
 	
 
-	public void vypisStav(File vystup){
+	/**
+	 * 
+	 */
+	public void prijmiObjednavky() {
+		
+		for (int i = 0; i < planety.size(); i++) {
+				objednavky.add(planety.get(i).vytrorObjednavku());
+		}
+
+	}
+
+	
+
+	public void vypisStav(File vystup) {
 		PrintWriter pw;
 
 		try {
 			pw = new PrintWriter(vystup);
-			
+
 			for (int i = 5; i < planety.size(); i++) {
 				System.out.println(planety.get(i));
 				pw.println(planety.get(i));
 			}
-			
+
 			pw.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	
+
 	public int getDen() {
 		return den;
 	}
@@ -130,9 +101,5 @@ public class Logistika {
 	public void setPlanety(ArrayList<Planeta> planety) {
 		this.planety = planety;
 	}
-
-	
-	
-	
 
 }

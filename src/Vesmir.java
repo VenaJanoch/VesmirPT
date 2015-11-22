@@ -46,9 +46,6 @@ public class Vesmir {
 		g = new Graf(souborMatice, r.getPlanety());
 		r.setPlanety(g.getVrcholy());
 		
-		Dijkstra2 d = new Dijkstra2(g);
-		r.najdiCesty(d);
-		
 		
 	}
 
@@ -80,7 +77,7 @@ public class Vesmir {
 		 * 
 		 * i++; }
 		 */
-	//	l.vypisStav(new File("vystup.txt"));
+	//l.vypisStav(new File("vystup.txt"));
 
 	}
 

@@ -1,8 +1,9 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
-public class Planeta {
+public class Planeta implements Comparable<Planeta>{
 
 	private String nazev;
 	private int pocetObyvatel;
@@ -14,7 +15,11 @@ public class Planeta {
 	private double dobaLetu;
 	
 	private Objednavka objednavka;
+	private Cesta p; 
+	private boolean obsluhovan;
+	
 	private Random r = new Random();
+	
 
 
 	public Planeta(String nazev, int pocetObyvatel, Point poloha) {
@@ -24,7 +29,15 @@ public class Planeta {
 		setPoloha(poloha);
 
 	}
+	
 
+	@Override
+	public int compareTo(Planeta p) {
+		int vzdalenost = ((Planeta)p).vzdalenostOdcentraly;
+		return vzdalenost - this.vzdalenostOdcentraly;
+
+	}
+	
 	@Override
 	public String toString() {
 		String popis = "Planeta " + nazev + " je zasobovana z " + getCentrala() + " centraly, poctem leku "
@@ -64,7 +77,7 @@ public class Planeta {
 	 */
 	public int spoctiCasLetu() {
 		double doba = vzdalenostOdcentraly / 25.0;
-		setDobaLetu(doba + 1);
+		dobaLetu = doba + 1;
 		return (int)doba +1;
 	}
 
@@ -159,5 +172,41 @@ public class Planeta {
 	public void setVzdalenostOdcentraly(int vzdalenostOdcentraly) {
 		this.vzdalenostOdcentraly = vzdalenostOdcentraly;
 	}
+
+
+	/**
+	 * @return the p
+	 */
+	public Cesta getP() {
+		return p;
+	}
+
+
+	/**
+	 * @param cesta the p to set
+	 */
+	public void setP(Cesta cesta) {
+		this.p = cesta;
+	}
+
+
+	/**
+	 * @return the obsluhovan
+	 */
+	public boolean isObsluhovan() {
+		return obsluhovan;
+	}
+
+
+	/**
+	 * @param obsluhovan the obsluhovan to set
+	 */
+	public void setObsluhovan(boolean obsluhovan) {
+		this.obsluhovan = obsluhovan;
+	}
+
+
+
+	
 
 }

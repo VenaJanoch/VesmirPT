@@ -1,17 +1,30 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
+
+import com.sun.corba.se.impl.oa.poa.POACurrent;
 
 public class Vesmir {
 
-	private static String souborPlaneta;
-	private static String souborMatice;
-	private static String souborCentrala;
-	private static Rozdeleni r;
-	private static Graf g;
-	private static Logistika l;
+	private  String souborPlaneta;
+	private  String souborMatice;
+	private  String souborCentrala;
+	private  Rozdeleni r;
+	private  Graf g;
+	private  Logistika l;
+	private  Scanner sc;
+	private  int volba;
+	private int volba2 = 5;
+	private  ArrayList<Integer> planetyRucne = new ArrayList<Integer>();
+	private  int planeta;
+	private  int lod;
+	private static Lod lodO;
+	private Cas c = new Cas();
+	
 
-	public static int behProgramu(String args[]) {
+	public int behProgramu(String args[]) {
 
 		if (args.length > 12) {
 			System.out.println("Zadano prilis parametru pro spusteni");
@@ -36,7 +49,7 @@ public class Vesmir {
 		return 0;
 	}
 
-	public static void nactiData(String args[]) {
+	public void nactiData(String args[]) {
 
 		souborPlaneta = args[1];
 		souborMatice = args[3];
@@ -45,11 +58,10 @@ public class Vesmir {
 		r = new Rozdeleni(souborPlaneta, souborCentrala);
 		g = new Graf(souborMatice, r.getPlanety());
 		r.setPlanety(g.getVrcholy());
-		
-		
+
 	}
 
-	public static void ulozData(String args[]) {
+	public void ulozData(String args[]) {
 
 		r = new Rozdeleni(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Double.valueOf(args[6]),
 				Integer.parseInt(args[7]), Integer.valueOf(args[8]), Integer.valueOf(args[9]),
@@ -64,47 +76,184 @@ public class Vesmir {
 
 	}
 
-	public static void rizeni() {
+	public void zadejObjednavkuRucne(String argumenty) {
+		String[] pom = argumenty.split(",");
+		int[] argumentyInt = new int[pom.length];
 
-		l = new Logistika(r.getPlanety(), g);
-		int i = 0;
+		for (int i = 0; i < pom.length; i++) {
+			argumentyInt[i] = Integer.parseInt(pom[i]);
+		}
 
-		l.setDen(0);
-		/*
-		 * while (i != 359) {
-		 * 
-		 * 
-		 * 
-		 * i++; }
-		 */
-	//l.vypisStav(new File("vystup.txt"));
+		planetyRucne.add(argumentyInt[0]);
+		l.getPlanety().get(argumentyInt[0]).setPocetBaleni(argumentyInt[1]);
+		l.getPlanety().get(argumentyInt[0]).setRucne(true);
 
 	}
 
+	public void rizeni() {
+
+		sc = new Scanner(System.in);
+		l = new Logistika(r.getPlanety(), g);
+		int i = 0;
+
+		while (i != 360) {
+			c.nastavDen((i%31));
+			if (i % 31 == 0) {
+				System.out.println("Chcete pridat objednavku rucne? Pokud ano stisknete jednicku");
+				volba = sc.nextInt();
+				while (volba == 1) {
+					System.out.println("Nejprve zadejte planetu (od 5 do 5005) a pak pocet leku k objednani");
+					zadejObjednavkuRucne(sc.next());
+					System.out.println("Chcete pridat dalsi objednavku rucne? Pokud ano stisnete jednicku");
+					volba = sc.nextInt();
+				}
+				
+				l.prijmiObjednavky();
+				l.setPlanetyPodleVzdalenosti((ArrayList<Planeta>) l.getPlanety().clone());
+				Collections.sort(l.getPlanetyPodleVzdalenosti());
+				l.vypravLode();
+				
+				for (int j = 0; j < planetyRucne.size(); j++) {
+					l.getPlanety().get(planetyRucne.get(j)).setRucne(false);
+				}
+
+			
+			} else {
+				volby(volba2);
+				l.dopravZbozi(i);
+			}
+		
+
+			i++;
+		}
+
+		// l.vypisStav(new File("vystup.txt"));
+
+	}
+	
+	public  void volby(int volba){
+		
+		switch (volba) {
+		case 2:
+			sledujPlanetuRucne();
+			break;
+		case 3:
+			sledujLodRucne();
+			break;
+		case 4:
+			sledujPlanetuRucne();
+			sledujLodRucne();
+			break;
+		case 5:
+			System.out.println(
+					"Prejete si sledovat nekterou z planet po nasledujici rok? Pokud ano stisknete 2."
+					+ " Pokud si prejete sledovat lod stisknete 3. Pokud oboji 4");
+			volba = sc.nextInt();
+			this.volba2 = volba;
+			volby(volba);
+			
+			break;
+	
+		default:
+			break;
+		}
+	}
+	
+	public  void sledujPlanetuRucne(){
+		
+		if (planeta == 0) {
+
+			System.out.println("Zadejte planetu z intervalu 5 az " + l.getPlanety().size());
+			planeta = sc.nextInt();
+
+			while (!jeSpravnePlaneta(planeta)) {
+				planeta = sc.nextInt();
+			}
+			sledujPlanetu(planeta);
+		}else {
+			
+			sledujPlanetu(planeta);
+		}
+		
+	}
+	
+	public  void sledujLodRucne(){
+		
+		if (lod == 0) {
+			System.out.println("Zadejte lod z intervalu 0 az " + l.getSeznamLodiZabrane().size());
+			lod = sc.nextInt();
+
+			while (!jeSpravneLod(lod)) {
+				lod = sc.nextInt();
+			}
+			
+			sledujLod1(lod);
+
+		}
+		sledujLod(lod);
+
+	}
+	public  boolean jeSpravnePlaneta(int index){
+		
+		if (planeta < 5 || planeta > l.getPlanety().size()) {
+			System.out.println("Zadana spatna planeta. Zadejte spravne jmeno");
+			return false;
+		}
+		return true;
+	}
+	
+	public  boolean jeSpravneLod(int index){
+		if (index < 0 || index > l.getSeznamLodiZabrane().size()) {
+			System.out.println("Zadana spatna lod. Zadejte spravne jmeno");
+			return false;
+		}
+		return true;
+	}
+	
+	public  void sledujPlanetu(int planeta){
+			System.out.println(c);
+			System.out.println(l.getPlanety().get(planeta));
+			
+		
+	}
+
+	public  void sledujLod1(int lod){
+		System.out.println(c);
+		lodO = l.getSeznamLodiZabrane().get(lod);
+		System.out.println(l.getSeznamLodiZabrane().get(lod));
+		System.out.println(lodO);
+	}
+	public  void sledujLod(int lod){
+		System.out.println(c);
+		System.out.println(lodO);
+	}
 	public static void main(String[] args) {
 
-		if (behProgramu(args) == 1) {
-			nactiData(args);
-			rizeni();
+		Vesmir v = new Vesmir();
+		
+		if (v.behProgramu(args) == 1) {
+			v.nactiData(args);
+			v.rizeni();
 		} else {
-			ulozData(args);
+			v.ulozData(args);
 		}
 
 	}
 
 	/**
-	 * @return the l
+	 * @return the c
 	 */
-	public static Logistika getL() {
-		return l;
+	public Cas getC() {
+		return c;
 	}
 
 	/**
-	 * @param l
-	 *            the l to set
+	 * @param c the c to set
 	 */
-	public static void setL(Logistika l) {
-		Vesmir.l = l;
+	public void setC(Cas c) {
+		this.c = c;
 	}
+
+	
 
 }

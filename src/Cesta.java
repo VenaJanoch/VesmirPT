@@ -1,12 +1,10 @@
 import java.util.ArrayList;
 
-public class Cesta {
+public class Cesta implements Comparable<Cesta>{
 
 	private ArrayList<Integer> planety;
-	private int vychozyBod;
-	private int cilovyBod;
+	private ArrayList<Usek> useky;
 	private int vzdalenos;
-	private int celkovyPocetLeku;
 	private boolean nebezpecna;
 
 	/**
@@ -17,13 +15,19 @@ public class Cesta {
 	 * @param vdalenost
 	 * @param celkovyPocetLeku
 	 */
-	public Cesta(ArrayList<Integer> planety, boolean nebezpecna) {
+	public Cesta(ArrayList<Usek> useky, ArrayList<Integer> planety) {
 		this.planety = planety;
-		this.setNebezpecna(nebezpecna);
+		this.setUseky(useky);
 
 
 	}
 
+	@Override
+	public int compareTo(Cesta c) {
+		int vzdalenost = ((Cesta)c).vzdalenos;
+		return vzdalenost - this.vzdalenos;
+
+	}
 	/********************Getry a Setry **********************/
 		public int getVzdalenos() {
 		return vzdalenos;
@@ -41,49 +45,7 @@ public class Cesta {
 		this.planety = planety;
 	}
 
-	/**
-	 * @return the celkovyPocetLeku
-	 */
-	public int getCelkovyPocetLeku() {
-		return celkovyPocetLeku;
-	}
-
-	/**
-	 * @param celkovyPocetLeku the celkovyPocetLeku to set
-	 */
-	public void setCelkovyPocetLeku(int celkovyPocetLeku) {
-		this.celkovyPocetLeku = celkovyPocetLeku;
-	}
-
 	
-	/**
-	 * @return the cilovyBod
-	 */
-	public int getCilovyBod() {
-		return cilovyBod;
-	}
-
-	/**
-	 * @param cilovyBod the cilovyBod to set
-	 */
-	public void setCilovyBod(int cilovyBod) {
-		this.cilovyBod = cilovyBod;
-	}
-
-	/**
-	 * @return the vychozyBod
-	 */
-	public int getVychozyBod() {
-		return vychozyBod;
-	}
-
-	/**
-	 * @param vychozyBod the vychozyBod to set
-	 */
-	public void setVychozyBod(int vychozyBod) {
-		this.vychozyBod = vychozyBod;
-	}
-
 	/**
 	 * @return the nebezpecna
 	 */
@@ -97,5 +59,21 @@ public class Cesta {
 	public void setNebezpecna(boolean nebezpecna) {
 		this.nebezpecna = nebezpecna;
 	}
+
+	/**
+	 * @return the useky
+	 */
+	public ArrayList<Usek> getUseky() {
+		return useky;
+	}
+
+	/**
+	 * @param useky the useky to set
+	 */
+	public void setUseky(ArrayList<Usek> useky) {
+		this.useky = useky;
+	}
+
+	
 
 }

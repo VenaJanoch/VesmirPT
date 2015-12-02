@@ -83,7 +83,7 @@ public class Rozdeleni {
 		while (pocetPlanet != getPocetPlanetCelkem()) {
 
 			pocetObyvatel = getPrumer() + ((int) (getPrumer() * r.nextGaussian()));
-
+			
 			if (pocetObyvatel > getDolniMez() && pocetObyvatel < getHorniMez()) {
 				setNazev(String.valueOf(pocetPlanet + pocetCentral));
 

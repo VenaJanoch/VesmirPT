@@ -1,41 +1,54 @@
 import java.awt.Point;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Random;
 
 public class Planeta implements Comparable<Planeta>{
 
+	public static int pocet;
 	private String nazev;
 	private int pocetObyvatel;
 	private Point poloha;
 	
 	private ArrayList<Planeta> partneri;
 	private ArrayList<Usek> useky;
+	private ArrayList<StatistikaPlaneta> statistika;
 	private String centrala;
-	private double pocetBaleni = 0;
+	private int pocetBaleni = 0;
 	private int vzdalenostOdcentraly;
 	private double dobaLetu;
 	private boolean nizkyPocet = false;
 	
 	private Objednavka objednavka;
+	private Umrti umrti;
 	private Cesta p; 
 	private boolean obsluhovan;
 	private boolean vykladan;
 	private boolean rucne;
 	private int datum;
 	private int vzdalenostOdPlanety;
-	private Random r = new Random();
 	private int procenta;
 	
 	private int index;
+	private int indexStatistika;
+	private int indexUmrti = 0;
 
 	private Lod lod;
-
+	
+	private Random r = new Random();
+	private static PrintWriter pw;
+	
 	public Planeta(String nazev, int pocetObyvatel, Point poloha) {
 
 		setNazev(nazev);
 		setPocetObyvatel(pocetObyvatel);
 		setPoloha(poloha);
+		this.setStatistika(new ArrayList<StatistikaPlaneta>());
+		this.setUmrti(new Umrti(getNazev(), getPocetObyvatel()));
 		
 	}
 	
@@ -55,32 +68,47 @@ public class Planeta implements Comparable<Planeta>{
 	
 	public void upravPopulaci(int pocetLekuProPlanetu){
 		
-				
-		//	System.out.println(getPocetObyvatel()- pocetLekuProPlanetu);
-			setPocetObyvatel(getPocetObyvatel() -(getPocetObyvatel()- pocetLekuProPlanetu));
+		setPocetObyvatel(domaciProdukce());
 			
 		
 	}
 	
-public void upravPopulaciLekyDorazily(int pocetLekuProPlanetu){
-	double pom = (double) (getPocetObyvatel())
-	* (double) ((double) (100 - procenta) / 100.0);
+	public int domaciProdukce(){
 	
+		double pom = ((double) (getPocetObyvatel())
+				* (double) ((double) (procenta) / 100.0));
+		return (int)pom;
+	}
 	
-		if (( getPocetObyvatel()- (pom + pocetLekuProPlanetu)) >5) {
+	public int svetovaProdukce(){
+		double pomSvetova = ((double) (getPocetObyvatel())
+				* (double) ((double) (100 - procenta) / 100.0));
 		
-			setPocetObyvatel(getPocetObyvatel() -(getPocetObyvatel()- pocetLekuProPlanetu));
+		return (int)pomSvetova;
+	}
+public void upravPopulaciLekyDorazily(int pocetLekuProPlanetu){
+	
+	
+	
+		if ((domaciProdukce() + pocetLekuProPlanetu) != (domaciProdukce() + svetovaProdukce()))  {
+		
+			setPocetObyvatel(domaciProdukce() + pocetLekuProPlanetu);
 		}
+		
+		umrti.getPocetObyvatel()[indexUmrti-1] = getPocetObyvatel();
 		
 	}
 	
+
+
 	public String jePopulace(){
-		if (getPocetObyvatel()< 400000) {
+		if (getPocetObyvatel()< 40000) {
 			setNizkyPocet(true);
 			return "Planeta " + nazev + " je pod normou obyvatel a je ignorovana";
 		}
-		String popis = "Planeta " + nazev + " pocet obyvatel "+ pocetObyvatel + " je zasobovana z " + getCentrala() + " centraly, poctem leku "
-				+ objednavka.getPocetLeku() + " za " + spoctiCasLetu() + " dnu";
+		String popis = "Planeta " + nazev + " pocet obyvatel "+ pocetObyvatel + " je zasobovana z " + 
+		getCentrala() + " centraly, poctem leku "
+			+ objednavka.getPocetLeku() + " za " + spoctiCasLetu() + " dnu";
 
 		return popis;
 	}
@@ -90,17 +118,19 @@ public void upravPopulaciLekyDorazily(int pocetLekuProPlanetu){
 	 */
 	
 	public Objednavka vytrorObjednavku(){
-
+		indexUmrti++;
 		if (isRucne()) {
 			vlastniVyroba();
-			Objednavka o = new Objednavka((int)pocetBaleni,getCentrala(),getNazev(),(int)dobaLetu);
+			Objednavka o = new Objednavka(pocetBaleni,getCentrala(),getNazev(),(int)dobaLetu);
 			setObjednavka(o);
 			return o;
 		}else{
+			vlastniVyroba();
+			double pom = ((double) (getPocetObyvatel())
+					* (double) ((double) (100 - procenta) / 100.0));
+			pocetBaleni = (int)pom ; 
 			
-			pocetBaleni = (double) (getPocetObyvatel())
-					* (double) ((double) (100 - vlastniVyroba()) / 100.0);
-			Objednavka o = new Objednavka((int)pocetBaleni,getCentrala(),getNazev(),(int)dobaLetu);
+			Objednavka o = new Objednavka(pocetBaleni,getCentrala(),getNazev(),(int)dobaLetu);
 			setObjednavka(o);
 			return o;
 		}
@@ -126,9 +156,59 @@ public void upravPopulaciLekyDorazily(int pocetLekuProPlanetu){
 		dobaLetu = doba;
 		return doba;
 	}
+	
+	
+	public void vypisStatistiku(){
+
+		try {
+			pw = new PrintWriter(new BufferedWriter(new FileWriter("planety/"+getNazev()+ ".txt")));
+			pw.println("Planeta: " + getNazev() + "pocatecny pocet obyvatel: " + getPocetObyvatel() + " zasobovana centralou: " + getCentrala());
+			
+			for (int i = 0; i < statistika.size(); i++) {
+				pw.println(statistika.get(i));
+			}
+			
+			pw.println("Celkovy pocet vyrobenych a prevezenych leku je: " + statistika.get(0).getCelkovyPocetLeku());
+			
+			vypisUmrti(pw);
+			
+			pw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Spatne zapsany vystupni soubor");
+			System.exit(1);
+		}
+		
+	}
+	
+public void vypisUmrti(PrintWriter pw){
+		
+					pw.println(umrti);					
+					umrti.prvniCtvrtleti();
+					umrti.druheCtvrtleti();
+					umrti.tretiCtvrtleti();
+			
+		
+	}
 
 	/****************************************** Getry a Setry *******************************/
 	
+	/**
+ * @return the procenta
+ */
+public int getProcenta() {
+	return procenta;
+}
+
+
+/**
+ * @param procenta the procenta to set
+ */
+public void setProcenta(int procenta) {
+	this.procenta = procenta;
+}
+
 	public String getNazev() {
 		return nazev;
 	}
@@ -152,7 +232,7 @@ public void upravPopulaciLekyDorazily(int pocetLekuProPlanetu){
 	/**
 	 * @return the pocetBaleni
 	 */
-	public double getPocetBaleni() {
+	public int getPocetBaleni() {
 		return pocetBaleni;
 	}
 
@@ -160,7 +240,7 @@ public void upravPopulaciLekyDorazily(int pocetLekuProPlanetu){
 	/**
 	 * @param pocetBaleni the pocetBaleni to set
 	 */
-	public void setPocetBaleni(double pocetBaleni) {
+	public void setPocetBaleni(int pocetBaleni) {
 		this.pocetBaleni = pocetBaleni;
 	}
 
@@ -395,6 +475,54 @@ public void upravPopulaciLekyDorazily(int pocetLekuProPlanetu){
 	 */
 	public void setLod(Lod lod) {
 		this.lod = lod;
+	}
+
+
+	/**
+	 * @return the statistika
+	 */
+	public ArrayList<StatistikaPlaneta> getStatistika() {
+		return statistika;
+	}
+
+
+	/**
+	 * @param statistika the statistika to set
+	 */
+	public void setStatistika(ArrayList<StatistikaPlaneta> statistika) {
+		this.statistika = statistika;
+	}
+
+
+	/**
+	 * @return the indexStatistika
+	 */
+	public int getIndexStatistika() {
+		return indexStatistika;
+	}
+
+
+	/**
+	 * @param indexStatistika the indexStatistika to set
+	 */
+	public void setIndexStatistika(int indexStatistika) {
+		this.indexStatistika = indexStatistika;
+	}
+
+
+	/**
+	 * @return the umrti
+	 */
+	public Umrti getUmrti() {
+		return umrti;
+	}
+
+
+	/**
+	 * @param umrti the umrti to set
+	 */
+	public void setUmrti(Umrti umrti) {
+		this.umrti = umrti;
 	}
 
 

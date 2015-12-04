@@ -22,6 +22,8 @@ public class Vesmir {
 	private  int lod;
 	private static Lod lodO;
 	private Cas c = new Cas();
+	private ArrayList<Umrti> umrti = new ArrayList<Umrti>();
+	private UmrtiStatistika us;
 	
 
 	public int behProgramu(String args[]) {
@@ -76,27 +78,31 @@ public class Vesmir {
 
 	}
 
-	public void zadejObjednavkuRucne(String argumenty) {
-		String[] pom = argumenty.split(",");
-		int[] argumentyInt = new int[pom.length];
-
-		for (int i = 0; i < pom.length; i++) {
-			argumentyInt[i] = Integer.parseInt(pom[i]);
-		}
-
-		planetyRucne.add(argumentyInt[0]);
-		l.getPlanety().get(argumentyInt[0]).setPocetBaleni(argumentyInt[1]);
-		l.getPlanety().get(argumentyInt[0]).setRucne(true);
-
-	}
+	
 
 	public void rizeni() {
+		int volba = 0;
+		sc = new Scanner(System.in);
+		System.out.println("Pozadujete rucni zadavani? Stisknete 1, pokud ne stisknete 2");
+		switch (sc.nextInt()) {
+		case 1:
+			seZadanim();
+			break;
+		case 2:
+			bezZadani();
+			break;
 
+		default:
+			break;
+		}
+
+	}
+	public void seZadanim(){
 		sc = new Scanner(System.in);
 		l = new Logistika(r.getPlanety(), g);
 		int i = 0;
 
-		while (i != 360) {
+		while (i != 361) {
 			c.nastavDen((i%31));
 			if (i % 31 == 0) {
 				System.out.println("Chcete pridat objednavku rucne? Pokud ano stisknete jednicku");
@@ -120,15 +126,54 @@ public class Vesmir {
 			
 			} else {
 				volby(volba2);
-				l.dopravZbozi(i);
+				l.dopravZbozi(c);
 			}
 		
 
 			i++;
 		}
 
-		// l.vypisStav(new File("vystup.txt"));
+	}
+	public void bezZadani(){
+		
+		l = new Logistika(r.getPlanety(), g);
+		int i = 0;
 
+		while (i != 361) {
+			c.nastavDen((i%31));
+			if (i % 31 == 0) {
+				l.prijmiObjednavky();
+				l.setPlanetyPodleVzdalenosti((ArrayList<Planeta>) l.getPlanety().clone());
+				Collections.sort(l.getPlanetyPodleVzdalenosti());
+				l.vypravLode();			
+			} else {
+				l.dopravZbozi(c);
+			}
+		
+
+			i++;
+		}
+		
+
+	}
+	public void zadejObjednavkuRucne(String argumenty) {
+	try{	
+		String[] pom = argumenty.split(",");
+		int[] argumentyInt = new int[pom.length];
+
+		for (int i = 0; i < pom.length; i++) {
+			argumentyInt[i] = Integer.parseInt(pom[i]);
+		}
+
+		planetyRucne.add(argumentyInt[0]);
+		l.getPlanety().get(argumentyInt[0]).setPocetBaleni(argumentyInt[1]);
+		l.getPlanety().get(argumentyInt[0]).setRucne(true);
+
+	} catch (Exception e) {
+		System.out.println("Spatne zadany vstup");
+		System.out.println("Vzor: 40,4000 ");
+		System.exit(1);
+	}
 	}
 	
 	public  void volby(int volba){
@@ -195,10 +240,12 @@ public class Vesmir {
 	}
 	public  boolean jeSpravnePlaneta(int index){
 		
-		if (planeta < 5 || planeta > l.getPlanety().size()) {
-			System.out.println("Zadana spatna planeta. Zadejte spravne jmeno");
-			return false;
-		}
+			
+			if (planeta < 5 || planeta > l.getPlanety().size()) {
+				System.out.println("Zadana spatna planeta. Zadejte spravne jmeno");
+				return false;
+			}
+		
 		return true;
 	}
 	
@@ -212,7 +259,10 @@ public class Vesmir {
 	
 	public  void sledujPlanetu(int planeta){
 			System.out.println(c);
-			System.out.println(l.getPlanety().get(planeta));
+			System.out.print(l.getPlanety().get(planeta) + " lod: ");
+			System.out.println(l.getPlanety().get(planeta).getLod());
+			
+			
 			
 		
 	}
@@ -220,20 +270,40 @@ public class Vesmir {
 	public  void sledujLod1(int lod){
 		System.out.println(c);
 		lodO = l.getSeznamLodiZabrane().get(lod);
-		System.out.println(l.getSeznamLodiZabrane().get(lod));
+		//System.out.println(l.getSeznamLodiZabrane().get(lod));
 		System.out.println(lodO);
 	}
 	public  void sledujLod(int lod){
 		System.out.println(c);
 		System.out.println(lodO);
+		System.out.println(lodO.getObC().getIndexUseky());
+		System.out.println(lodO.getObC().getIndexDodavky());
+
 	}
+	
+	public void statistika(){
+
+		for (int i = 5; i < l.getPlanety().size(); i++) {
+			l.getPlanety().get(i).vypisStatistiku();
+			umrti.add(l.getPlanety().get(i).getUmrti());
+		}
+		
+		us = new UmrtiStatistika(umrti);		
+		us.vypisUmrti();
+		us.vypisUmrtiCele();
+	}
+	
 	public static void main(String[] args) {
 
 		Vesmir v = new Vesmir();
 		
 		if (v.behProgramu(args) == 1) {
 			v.nactiData(args);
+			
 			v.rizeni();
+			v.statistika();
+			
+			
 		} else {
 			v.ulozData(args);
 		}

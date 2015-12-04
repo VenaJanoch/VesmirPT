@@ -66,23 +66,26 @@ public class Logistika {
 
 	}
 
-	public void dopravZbozi(int den) {
-
+	public void dopravZbozi(Cas cas) {
+	
 		int pocetUrazenychMil;
 		Lod pom;
 		int index;
+		int indexDodavky;
 		
 		Collections.sort(seznamLodiZabrane);
 		
 		for (int i = 0; i < seznamLodiZabrane.size(); i++) {
 
-			index = seznamLodiZabrane.get(i).getObC().getIndex();
+			index = seznamLodiZabrane.get(i).getObC().getIndexUseky();
+			indexDodavky = seznamLodiZabrane.get(i).getObC().getIndexDodavky();
+			
 			pom = seznamLodiZabrane.get(i);
 			pocetUrazenychMil = pom.getUrazeno();
 			
 			// pokud uz nejsou zadne planety k doruceni
 			if (index < 0) {
-				if (den != planety.get(Integer.parseInt(pom.getObC().getP().get(index + 1).getNazev())).getDatum()) {
+				if (cas.getDen() != planety.get(Integer.parseInt(pom.getObC().getP().get(index + 1).getNazev())).getDatum()) {
 					
 					// dodelat nefunguje 
 					if (pom.getUrazeno()-24 < 0 ) {
@@ -101,15 +104,15 @@ public class Logistika {
 				int index2 = Integer.parseInt(pom.getObC().getP().get(index).getNazev());
 
 				if (planety.get(index2).getUseky().get(planety.get(index2).getIndex()).znicNaklad()) {
-				//	System.out.println(pom.getNazev());
-					pom = znic(index2, pom);
+					pom = znic(index2, pom,cas, index);
+					
 					
 				} else {
 
 					if (zjistiVzdalenostDoCile(pom.getUrazeno(),
 							pom.getObC().getP().get(index).getVzdalenostOdcentraly()) <= 24) {
 
-						pom = mensiVzdalenost(index, index2, den, pom, pocetUrazenychMil);
+						pom = mensiVzdalenost(indexDodavky,index, index2, cas, pom, pocetUrazenychMil);
 					
 					} else {
 
@@ -127,29 +130,36 @@ public class Logistika {
 		}
 	}
 
-	public Lod znic(int index2, Lod pom){
+	public Lod znic(int index2, Lod pom, Cas c, int index){
+	
 		planety.get(index2).getUseky().get(planety.get(index2).getIndex()).setPrulet(1);
 		planety.get(index2).setIndex(planety.get(index2).getIndex()-1);
-		planety.get(index2).upravPopulaci(planety.get(index2).getObjednavka().getPocetLeku());
+		planety.get(index2).upravPopulaci(pom.getObC().getP().get(index).getObjednavka().getPocetLeku());
+		planety.get(index2).getStatistika().add(new StatistikaPlaneta(0,pom,c.getMesic()));
+		planety.get(index2).getStatistika().get((c.getMesic()-1)).zvysPocet();
 		pom.setStav(false);
-	//	System.out.println(pom);
 		
 		return pom;
 	}
 
 
-	public Lod mensiVzdalenost(int index, int index2, int den, Lod pom, int pocetUrazenychMil) {
+	public Lod mensiVzdalenost(int indexDodavky, int index, int index2, Cas c, Lod pom, int pocetUrazenychMil) {
 		int datum = planety.get(Integer.parseInt(pom.getObC().getP().get(index).getNazev())).getDatum();
-
-		if (den == (datum + 1)) {
-
+		int leky = 0;
+		if (c.getDen() == (datum + 1)) {
+		
+			leky = pom.getObC().getP().get(index).getObjednavka().getPocetLeku();
 			planety.get(index2).setDatum(0);
 			planety.get(index2).setVzdalenostOdPlanety(pom.getUrazeno());
-			planety.get(index2).upravPopulaciLekyDorazily((pom.getObC().getP().get(index).getObjednavka().getPocetLeku()));
-			pom.getObC().setIndex(index - 1);
+			planety.get(index2).upravPopulaciLekyDorazily(leky);
+			planety.get(index2).getStatistika().add(new StatistikaPlaneta(leky,pom,c.getMesic()));
+			planety.get(index2).getStatistika().get(planety.get(index2).getIndexStatistika()).zvysPocet();				
+		    planety.get(index2).setIndexStatistika(planety.get(index2).getIndexStatistika() +1);
+		    pom.getObC().setIndexUseky(index - 1);
+		    pom.getObC().setIndexDodavky(indexDodavky-1);
 
 		} else {
-			nastavDatumAVykladku(pom, index, pocetUrazenychMil, index2, den);
+			nastavDatumAVykladku(pom, index, pocetUrazenychMil, index2, c.getDen());
 
 			planety.get(index2).setVzdalenostOdPlanety(pom.getUrazeno());
 
@@ -196,14 +206,18 @@ public class Logistika {
 	 * Vypravy lode
 	 */
 	public void vypravLode() {
-
+		
 		for (int i = 0; i < planetyPodleVzdalenosti.size(); i++) {
 			sectiObjednavky(planetyPodleVzdalenosti.get(i));
 			planetyPodleVzdalenosti.get(i).setIndex(planetyPodleVzdalenosti.get(i).getUseky().size()-1);
+			
+			
 		}
-
+	
 		for (int i = 0; i < cestaO.size(); i++) {
-			cestaO.get(i).setIndex(cestaO.get(i).getP().size() - 1);
+		
+			cestaO.get(i).setIndexUseky(cestaO.get(i).getP().size() - 1);
+			cestaO.get(i).setIndexDodavky(cestaO.get(i).getD().size() - 1);
 			vypravLod(cestaO.get(i));
 		}
 	}
@@ -233,6 +247,9 @@ public class Logistika {
 
 					if (planeta.getObjednavka().getPocetLeku() > maxNaklad) {
 						celkem += maxNaklad - 1;
+						planeta.setObsluhovan(true);
+						dodavky.add(new Dodavka(planeta.getObjednavka().getPocetLeku(), planeta));
+					
 					} else {
 
 						celkem += planeta.getObjednavka().getPocetLeku();
@@ -254,6 +271,7 @@ public class Logistika {
 					if (planety.get(index).isObsluhovan() != true) {
 
 						int objednavka = planety.get(index).getObjednavka().getPocetLeku();
+						
 						celkem += objednavka;
 
 						planety.get(index).setObsluhovan(true);
@@ -317,7 +335,6 @@ public class Logistika {
 	 * Vypravy lod z centraly do cile s potrebnym poctem leku
 	 */
 	public void vypravLod(ObchodniCesta c) {
-
 		Lod lod;
 		int index = 0;
 		if (seznamLodiVolne.isEmpty()) {
@@ -331,6 +348,8 @@ public class Logistika {
 		seznamLodiZabrane.add(lod);
 		seznamLodiVolne.remove(index);
 
+		//System.out.println(lod);
+		
 	}
 
 	public void vytvorLod() {

@@ -1,15 +1,20 @@
 import java.util.ArrayList;
 
-public class Cesta implements Comparable<Cesta>{
-
+public class Cesta {
+	/***
+	 * @author Václav Janoch
+	 * @author Filip Kupilik
+	 * 
+	 */
+	/** Promenne potrebne pro praci */
 	private ArrayList<Integer> planety;
 	private ArrayList<Usek> useky;
 	private int vzdalenos;
 	private boolean nebezpecna;
 
 	/**
-	 * Konstruktor tridy
-	 * Ulozi planety pres ktere poleti lod, celkouvou vzdalenost a celkovy pocet leku na trase
+	 * Konstruktor tridy Ulozi planety pres ktere poleti lod, celkouvou
+	 * vzdalenost a celkovy pocet leku na trase
 	 * 
 	 * @param planety
 	 * @param vdalenost
@@ -19,17 +24,10 @@ public class Cesta implements Comparable<Cesta>{
 		this.planety = planety;
 		this.setUseky(useky);
 
-
 	}
 
-	@Override
-	public int compareTo(Cesta c) {
-		int vzdalenost = ((Cesta)c).vzdalenos;
-		return vzdalenost - this.vzdalenos;
-
-	}
-	/********************Getry a Setry **********************/
-		public int getVzdalenos() {
+	/******************** Getry a Setry **********************/
+	public int getVzdalenos() {
 		return vzdalenos;
 	}
 
@@ -45,7 +43,6 @@ public class Cesta implements Comparable<Cesta>{
 		this.planety = planety;
 	}
 
-	
 	/**
 	 * @return the nebezpecna
 	 */
@@ -54,7 +51,8 @@ public class Cesta implements Comparable<Cesta>{
 	}
 
 	/**
-	 * @param nebezpecna the nebezpecna to set
+	 * @param nebezpecna
+	 *            the nebezpecna to set
 	 */
 	public void setNebezpecna(boolean nebezpecna) {
 		this.nebezpecna = nebezpecna;
@@ -68,12 +66,11 @@ public class Cesta implements Comparable<Cesta>{
 	}
 
 	/**
-	 * @param useky the useky to set
+	 * @param useky
+	 *            the useky to set
 	 */
 	public void setUseky(ArrayList<Usek> useky) {
 		this.useky = useky;
 	}
-
-	
 
 }

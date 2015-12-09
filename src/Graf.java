@@ -10,6 +10,13 @@ import java.util.Scanner;
 
 public class Graf {
 
+	/***
+	 * @author Václav Janoch 
+	 * @author Filip Kupilik
+	 * 
+	 */
+	
+	/** Promenne potrebne pro praci */
 	private ArrayList<Planeta> vrcholy;
 	private int matice[][];
 	private int velikost;
@@ -17,8 +24,17 @@ public class Graf {
 	private int dalsi[];
 	private int ohodnocenaHrana;
 
+	/** Instance tridy Scanner pro ceteni dat ze souboru */
 	private Scanner sc;
 
+	/**
+	 * Konstruktor pro nacteni grafu ze souboru
+	 * 
+	 * @param souborMatice
+	 *            soubor ve kterem je ulozeny graf
+	 * @param vrcholy
+	 *            jednotlive vrcholy
+	 */
 	public Graf(String souborMatice, ArrayList<Planeta> vrcholy) {
 		setVrcholy(vrcholy);
 		setVelikost(vrcholy.size());
@@ -29,11 +45,15 @@ public class Graf {
 		najdiVzdalenosti();
 		najdiSousedy();
 
-		// ulozGraf();
-
 		dalsi = new int[velikost];
 	}
 
+	/**
+	 * Kontruktor tridy pro vygenerovani grafu do souboru
+	 * 
+	 * @param vrcholy
+	 *            jenotlive planety
+	 */
 	public Graf(ArrayList<Planeta> vrcholy) {
 
 		setVrcholy(vrcholy);
@@ -46,6 +66,10 @@ public class Graf {
 		najdiSousedy();
 	}
 
+	/**
+	 * Vytvori matici vzdalenosti kde jsou ulozeny jednotlive vzdalenosti mezi
+	 * planetami
+	 */
 	public void najdiVzdalenosti() {
 
 		for (int i = 0; i < vrcholy.size(); i++) {
@@ -56,20 +80,31 @@ public class Graf {
 		}
 	}
 
+	/**
+	 * Zjisti vzdalenost mezi jednotlivymi dvema planetama
+	 * 
+	 * @param i
+	 *            pocatecni planeta
+	 * @param j
+	 *            cilova planeta
+	 * @return
+	 */
 	public int delkaHrany(int i, int j) {
 		return matice[i][j];
 	}
 
 	/**
-	 * Najde sousedni vrcholy 
-	 * @param i vrchol pro prohledani sousedu
-	 * @return pole sousedu 
+	 * Najde sousedni vrcholy
+	 * 
+	 * @param i
+	 *            vrchol pro prohledani sousedu
+	 * @return pole sousedu
 	 */
-	  public int[] sousedi(int i){
-	 
+	public int[] sousedi(int i) {
+
 		int[] sousedi;
-		
-		ArrayList<Integer> list= new ArrayList<Integer>();
+
+		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int j = 0; j < vrcholy.size(); j++) {
 			if (matice[i][j] != 0) {
 				list.add(j);
@@ -79,14 +114,14 @@ public class Graf {
 		for (int j = 0; j < sousedi.length; j++) {
 			sousedi[j] = list.get(j);
 		}
-		
+
 		return sousedi;
-		
+
 	}
 
-	  /**
-	   * Najde pet nejblizsich sousedu pro vytvoreni hrafu
-	   */
+	/**
+	 * Najde pet nejblizsich sousedu pro vytvoreni grafu
+	 */
 	public void najdiSousedy() {
 
 		int pomVzdalenost = -1;
@@ -124,8 +159,10 @@ public class Graf {
 	}
 
 	/**
+	 * Metoda ktera nacte graf ze souboru
 	 * 
 	 * @param nazevSouboru
+	 *            Nazev souboru kde je graf ulozeny
 	 */
 	public void nactiGraf(String nazevSouboru) {
 		File f = new File(nazevSouboru);
@@ -158,6 +195,12 @@ public class Graf {
 
 	}
 
+	/**
+	 * Metoda pro ulozeni grafu do souboru
+	 * 
+	 * @param nazevSouboru
+	 *            Nazev souboru kam se ma graf vygenerovat
+	 */
 	public void ulozGraf(String nazevSouboru) {
 
 		PrintWriter pw;
@@ -183,9 +226,11 @@ public class Graf {
 		}
 
 	}
-/**
- * vypise graf do konzole
- */
+
+	/**
+	 * vypise graf do konzole
+	 *
+	 */
 	public void ulozGraf() {
 		for (int i = 0; i < matice.length; i++) {
 			for (int j = 0; j < matice.length; j++) {
@@ -213,39 +258,65 @@ public class Graf {
 		matice[indexY][indexX] = hodnota;
 	}
 
-	/***                           Getry a setry                               */
-	/*****************************************
-	 * 
+	/****************** Getry a setry ****************/
+	/*
 	 * @return
 	 */
 	public ArrayList<Planeta> getVrcholy() {
 		return vrcholy;
 	}
 
+	/**
+	 * @param vrcholy
+	 */
 	public void setVrcholy(ArrayList<Planeta> vrcholy) {
 		this.vrcholy = vrcholy;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int[][] getMatice() {
 		return matice;
 	}
 
+	/**
+	 * 
+	 * @param matice
+	 */
 	public void setMatice(int[][] matice) {
 		this.matice = matice;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getVelikost() {
 		return velikost;
 	}
 
+	/**
+	 * 
+	 * @param velikost
+	 */
 	public void setVelikost(int velikost) {
 		this.velikost = velikost;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int[][] getMaticeVzdalenosti() {
 		return maticeVzdalenosti;
 	}
 
+	/**
+	 * 
+	 * @param maticeVzdalenosti
+	 */
 	public void setMaticeVzdalenosti(int maticeVzdalenosti[][]) {
 		this.maticeVzdalenosti = maticeVzdalenosti;
 	}

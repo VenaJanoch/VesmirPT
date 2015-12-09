@@ -12,6 +12,17 @@ import java.util.Scanner;
 
 public class Rozdeleni {
 
+	/***
+	 * @author Václav Janoch
+	 * @author Filip Kupilik
+	 * 
+	 */
+
+	/** staticke instance trid */
+	private static PrintWriter pw;
+	private static Scanner sc;
+
+	/** Promenne potrenbne pro praci */
 	private int pocetObyvatel;
 	private String nazev;
 	private int pocetPlanetCelkem;
@@ -23,14 +34,14 @@ public class Rozdeleni {
 	private int velikostVesmiruY;
 	private int pocetCentral;
 	private ArrayList<Planeta> planety;
-	private static PrintWriter pw;
-	private static Scanner sc;
 
 	/**
 	 * Konstruktor pro praci uz s vygenerovanym vesmirem
 	 * 
 	 * @param souborPlaneta
+	 *            Soubor ve kterem jsou vygenerovane jednotlive planety
 	 * @param souborCentrala
+	 *            Soubor kde jsou ulozene centraly
 	 */
 	public Rozdeleni(String souborPlaneta, String souborCentrala) {
 
@@ -46,16 +57,22 @@ public class Rozdeleni {
 	 * Konstruktor pro vygenerovani vesmiru
 	 * 
 	 * @param pocetPlanet
+	 *            pocet planet ve vesmiru
 	 * @param prumer
-	 * @param odchylka
+	 *            prumet obyvatel na planete
 	 * @param pocetCentral
+	 *            pocet centra ve vesmiru
 	 * @param dolniMez
+	 *            dolni mez pro pocet obyvatel
 	 * @param horniMez
+	 *            horni mez pro pocet obyvatel
 	 * @param velikstVesmiruX
+	 *            sirka vesmiru
 	 * @param velikostVesmiruY
+	 *            vyska vesmiru
 	 */
-	public Rozdeleni(int pocetPlanet, int prumer, double odchylka, int pocetCentral, int dolniMez, int horniMez,
-			int velikstVesmiruX, int velikostVesmiruY) {
+	public Rozdeleni(int pocetPlanet, int prumer, int pocetCentral, int dolniMez, int horniMez, int velikstVesmiruX,
+			int velikostVesmiruY) {
 
 		this.setPocetPlanetCelkem(pocetPlanet);
 		this.setPrumer(prumer);
@@ -83,7 +100,7 @@ public class Rozdeleni {
 		while (pocetPlanet != getPocetPlanetCelkem()) {
 
 			pocetObyvatel = getPrumer() + ((int) (getPrumer() * r.nextGaussian()));
-			
+
 			if (pocetObyvatel > getDolniMez() && pocetObyvatel < getHorniMez()) {
 				setNazev(String.valueOf(pocetPlanet + pocetCentral));
 
@@ -128,6 +145,7 @@ public class Rozdeleni {
 	 * Vypise centraly do souboru
 	 * 
 	 * @param nazevSouboru
+	 *            nazev souboru kam se maji centraly vygenerovat
 	 */
 	public void vypisCentraly(String nazevSouboru) {
 
@@ -154,9 +172,10 @@ public class Rozdeleni {
 	}
 
 	/**
-	 * vypise planety od souboru
+	 * vypise planety do souboru
 	 * 
 	 * @param nazevSouboru
+	 *            kam se maji vypsat jednotlive planety
 	 */
 	public void vypisPlanety(String nazevSouboru) {
 
@@ -186,6 +205,7 @@ public class Rozdeleni {
 	 * Nacte planety ze souboru
 	 * 
 	 * @param nazevSouboru
+	 *            nazev souboru kde jsou ulozeny jednotlive planety
 	 */
 	public void nactiPlanety(String nazevSouboru) {
 		try {
@@ -225,7 +245,9 @@ public class Rozdeleni {
 	 * nacte centraly ze souboru
 	 * 
 	 * @param nazevSouboru
+	 *            nazev souboru kde jsou ulozeny centraly
 	 */
+
 	public void nactiCentraly(String nazevSouboru) {
 		try {
 			sc = new Scanner(new File(nazevSouboru));

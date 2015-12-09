@@ -1,38 +1,51 @@
 
 public class Usek {
-	
+
+	/** Promenne potrebne pro praci */
 	private int pocatek;
 	private int cil;
 	private int vzdalenost;
 	private boolean nebezpecny;
 	private int pocetPruletu;
 	private int prulet = 1;
-	
+
+	/**
+	 * Konstruktor tridy
+	 * 
+	 * @param pocatek
+	 *            pocatecny planeta
+	 * @param cil
+	 *            koncova planeta
+	 * @param vzdalenost
+	 *            vzdalenost mezi planetami
+	 * @param nebezpecny
+	 *            zda je usek oznacen jako nebezpecny ci nikoli
+	 */
 	public Usek(int pocatek, int cil, int vzdalenost, boolean nebezpecny) {
 		this.setPocatek(pocatek);
 		this.setCil(cil);
 		this.setVzdalenost(vzdalenost);
 		this.setPocatek(pocatek);
 	}
-	
-	
-	public boolean znicNaklad(){
-		
-		if ((pocetPruletu/prulet)%(pocetPruletu*0.1) != 0) {
-			
+
+	/**
+	 * Metoda pro urceni zda ma byt zniceny naklad na lodi
+	 * 
+	 * @return true pokud ano false pokud ne
+	 */
+	public boolean znicNaklad() {
+
+		if ((pocetPruletu / prulet) % (pocetPruletu * 0.1) != 0) {
+
 			return false;
-		}else {
+		} else {
 			prulet = 0;
 			return true;
 		}
-		
-		
+
 	}
-	/************************************* Getry a Setry ***********************************/
-	
-	
-	
-	
+	/**************************** Getry a Setry ************************/
+
 	/**
 	 * @return the pocatek
 	 */
@@ -47,17 +60,17 @@ public class Usek {
 		return prulet;
 	}
 
-
 	/**
-	 * @param prulet the prulet to set
+	 * @param prulet
+	 *            the prulet to set
 	 */
 	public void setPrulet(int prulet) {
 		this.prulet = prulet;
 	}
 
-
 	/**
-	 * @param pocatek the pocatek to set
+	 * @param pocatek
+	 *            the pocatek to set
 	 */
 	public void setPocatek(int pocatek) {
 		this.pocatek = pocatek;
@@ -71,7 +84,8 @@ public class Usek {
 	}
 
 	/**
-	 * @param cil the cil to set
+	 * @param cil
+	 *            the cil to set
 	 */
 	public void setCil(int cil) {
 		this.cil = cil;
@@ -85,7 +99,8 @@ public class Usek {
 	}
 
 	/**
-	 * @param vzdalenost the vzdalenost to set
+	 * @param vzdalenost
+	 *            the vzdalenost to set
 	 */
 	public void setVzdalenost(int vzdalenost) {
 		this.vzdalenost = vzdalenost;
@@ -99,13 +114,12 @@ public class Usek {
 	}
 
 	/**
-	 * @param nebezpecny the nebezpecny to set
+	 * @param nebezpecny
+	 *            the nebezpecny to set
 	 */
 	public void setNebezpecny(boolean nebezpecny) {
 		this.nebezpecny = nebezpecny;
 	}
-
-	
 
 	/**
 	 * @return the pocetPruletu
@@ -115,11 +129,11 @@ public class Usek {
 	}
 
 	/**
-	 * @param pocetPruletu the pocetPruletu to set
+	 * @param pocetPruletu
+	 *            the pocetPruletu to set
 	 */
 	public void setPocetPruletu(int pocetPruletu) {
 		this.pocetPruletu = pocetPruletu;
 	}
 
 }
-

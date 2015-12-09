@@ -1,20 +1,39 @@
-import java.awt.Point;
 
 public class Objednavka {
 
+	/***
+	 * @author Václav Janoch
+	 * @author Filip Kupilik
+	 * 
+	 */
+
+	/** Promenne potrebne pro praci */
 	private int pocetLeku;
 	private String centrala;
 	private String idPlanety;
 	private int dobaLetu;
 
-	public Objednavka(int pocetLeku , String centrala, String jmeno, int dobaLetu) {
+	/**
+	 * Konstruktor tridy nastavi pocet leku kolik je potreba, centralu od kud se
+	 * leky povezou jmeno planety dobu letu do planety
+	 * 
+	 * @param pocetLeku
+	 *            potrebny pocet leku pro planetu
+	 * @param centrala
+	 *            centrala planety
+	 * @param jmeno
+	 *            jmeno planety
+	 * @param dobaLetu
+	 *            doba letu do planety
+	 */
+	public Objednavka(int pocetLeku, String centrala, String jmeno, int dobaLetu) {
 		setPocetLeku(pocetLeku);
 		setCentrala(centrala);
 		setIdPlanety(jmeno);
 		setDobaLetu(dobaLetu);
 	}
 
-	
+	/******************* Getry a Setry ******************/
 	/**
 	 * @return the pocetLeku
 	 */
@@ -53,12 +72,12 @@ public class Objednavka {
 	}
 
 	/**
-	 * @param centrala the centrala to set
+	 * @param centrala
+	 *            the centrala to set
 	 */
 	public void setCentrala(String centrala) {
 		this.centrala = centrala;
 	}
-
 
 	/**
 	 * @return the dobaLetu
@@ -67,9 +86,9 @@ public class Objednavka {
 		return dobaLetu;
 	}
 
-
 	/**
-	 * @param dobaLetu the dobaLetu to set
+	 * @param dobaLetu
+	 *            the dobaLetu to set
 	 */
 	public void setDobaLetu(int dobaLetu) {
 		this.dobaLetu = dobaLetu;

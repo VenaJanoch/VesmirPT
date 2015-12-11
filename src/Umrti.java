@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class Umrti {
 	
@@ -15,7 +16,12 @@ public class Umrti {
 
 	/** Promenne potrebne pro praci */
 	private String planeta;
-	private int[] pocetObyvatel;
+	private ArrayList<Integer> pocetObyvatel;
+
+	public void setPocetObyvatel(ArrayList<Integer> pocetObyvatel) {
+		this.pocetObyvatel = pocetObyvatel;
+	}
+
 	private int pocatecnyStavObyvatel;
 	private int pomPocetObyvatel = pocatecnyStavObyvatel;
 
@@ -30,7 +36,7 @@ public class Umrti {
 	 */
 	public Umrti(String planeta, int pocatecnyStavObyvatel) {
 		this.setPlaneta(planeta);
-		this.pocetObyvatel = new int[12];
+		this.pocetObyvatel = new ArrayList<Integer>();
 		this.setPocatecnyStavObyvatel(pocatecnyStavObyvatel);
 	}
 
@@ -42,11 +48,11 @@ public class Umrti {
 
 		String vypisObyvatel = "";
 
-		for (int i = 0; i < pocetObyvatel.length; i++) {
+		for (int i = 0; i < pocetObyvatel.size(); i++) {
 			int mesic = i + 1;
-			vypisObyvatel += " Mesic " + mesic + ". pocet obyvatel " + pocetObyvatel[i] + ".  \n";
+			vypisObyvatel += " Mesic " + mesic + ". pocet obyvatel " + pocetObyvatel.get(i) + ".  \n";
 		}
-		String vypis = "Planeta: " + planeta + "vyvoj obyvatel\n" + vypisObyvatel;
+		String vypis = "Planeta: " + planeta + " vyvoj obyvatel\n" + vypisObyvatel;
 		return vypis;
 	}
 
@@ -55,11 +61,15 @@ public class Umrti {
 	 */
 	public void prvniCtvrtleti() {
 		int pocet = 0;
-
-		for (int i = 0; i < 4; i++) {
-			pocet += pomPocetObyvatel - (pomPocetObyvatel - pocetObyvatel[i]);
-			pomPocetObyvatel = pocetObyvatel[i];
-		}
+		
+		double pocetObyvatelD = pocetObyvatel.size();
+		double mez = (pocetObyvatelD*(1.0/3.0))-1;
+			
+			for (int i = 0; i < mez; i++) {
+				pocet += pomPocetObyvatel - (pomPocetObyvatel - pocetObyvatel.get(i));
+				pomPocetObyvatel = pocetObyvatel.get(i);
+			}
+			
 		CelkemUmrtnost = pocet;
 		prvniC += pocet;
 	}
@@ -69,10 +79,13 @@ public class Umrti {
 	 */
 	public void druheCtvrtleti() {
 		int pocet = 0;
-
-		for (int i = 4; i < 7; i++) {
-			pocet += pomPocetObyvatel - (pomPocetObyvatel - pocetObyvatel[i]);
-			pomPocetObyvatel = pocetObyvatel[i];
+		
+		double pocetObyvatelD = pocetObyvatel.size();
+		double mez = (pocetObyvatelD*(2.0/3.0))-1;
+			
+		for (int i = 4; i < mez; i++) {
+			pocet += pomPocetObyvatel -  (pomPocetObyvatel - pocetObyvatel.get(i));
+			pomPocetObyvatel = pocetObyvatel.get(i);
 		}
 		CelkemUmrtnost = pocet;
 		druheC += pocet;
@@ -84,15 +97,27 @@ public class Umrti {
 	public void tretiCtvrtleti() {
 		int pocet = 0;
 
-		for (int i = 8; i < 11; i++) {
-			pocet += pomPocetObyvatel - (pomPocetObyvatel - pocetObyvatel[i]);
-			pomPocetObyvatel = pocetObyvatel[i];
+		for (int i = 8; i < pocetObyvatel.size(); i++) {
+			pocet += pomPocetObyvatel - (pomPocetObyvatel - pocetObyvatel.get(i));
+			pomPocetObyvatel = pocetObyvatel.get(i);
 		}
 		CelkemUmrtnost = pocet;
 		tretiC += pocet;
 	}
 	/****************************** Getry a Setry ************/
 
+	/**
+	 * @return the pocetObyvatel
+	 */
+	public ArrayList<Integer> getPocetObyvatel() {
+		return pocetObyvatel;
+	}
+
+	/**
+	 * @param pocetObyvatel the pocetObyvatel to set
+	 */
+	
+	
 	/**
 	 * @return the planeta
 	 */
@@ -111,17 +136,7 @@ public class Umrti {
 	/**
 	 * @return the pocetObyvatel
 	 */
-	public int[] getPocetObyvatel() {
-		return pocetObyvatel;
-	}
-
-	/**
-	 * @param pocetObyvatel
-	 *            the pocetObyvatel to set
-	 */
-	public void setPocetObyvatel(int[] pocetObyvatel) {
-		this.pocetObyvatel = pocetObyvatel;
-	}
+	
 
 	/**
 	 * @return the pocatecnyStavObyvatel

@@ -320,8 +320,8 @@ public class Vesmir {
 	public void sledujPlanetu(int planeta) {
 		System.out.println(c);
 		System.out.print(l.getPlanety().get(planeta) + " lod: ");
-		System.out.println(l.getPlanety().get(planeta).getLod());
-
+		//System.out.println(l.getPlanety().get(planeta).getLod());
+		
 	}
 
 	public void sledujLod1(int lod) {
@@ -336,6 +336,7 @@ public class Vesmir {
 		System.out.println(lodO);
 		System.out.println(lodO.getObC().getIndexUseky());
 		System.out.println(lodO.getIndex());
+	
 
 	}
 
@@ -350,13 +351,14 @@ public class Vesmir {
 		for (int i = 0; i < l.getSeznamLodiVolne().size(); i++) {
 		 l.getSeznamLodiVolne().get(i).vypisLod();
 		 }
-
+	//	l.getSeznamLodiVolne().get(0).getStatistika().setPocetLekuCelkem(l.getSeznamLodiVolne().get(0).getPrepadeniCelkem());
+	//	System.out.println(l.getSeznamLodiVolne().get(0).getPrepadeniCelkem());
 		l.getSeznamLodiVolne().get(0).vypisLodCelkem();
 		
 	}
 
 	public static void main(String[] args) {
-
+	
 		Vesmir v = new Vesmir();
 
 		if (v.behProgramu(args) == 1) {

@@ -33,6 +33,7 @@ public class Planeta implements Comparable<Planeta> {
 
 	/** Promenne potrebne pro statistiku */
 	private ArrayList<StatistikaPlaneta> statistika;
+	private StatistikaPlaneta s;
 	private Umrti umrti;
 	private boolean obsluhovan;
 	private boolean vykladan;
@@ -43,7 +44,6 @@ public class Planeta implements Comparable<Planeta> {
 	/** Promenne potrebne pro praci */
 	private int index;
 	private int indexStatistika;
-	private int indexUmrti = 0;
 	private Cesta p;
 	private Lod lod;
 
@@ -68,6 +68,7 @@ public class Planeta implements Comparable<Planeta> {
 		setNazev(nazev);
 		setPocetObyvatel(pocetObyvatel);
 		setPoloha(poloha);
+		s = new StatistikaPlaneta();
 		this.setStatistika(new ArrayList<StatistikaPlaneta>());
 		this.setUmrti(new Umrti(getNazev(), getPocetObyvatel()));
 
@@ -140,7 +141,6 @@ public class Planeta implements Comparable<Planeta> {
 			setPocetObyvatel(domaciProdukce() + pocetLekuProPlanetu);
 		}
 
-		umrti.getPocetObyvatel()[indexUmrti - 1] = getPocetObyvatel();
 
 	}
 
@@ -168,7 +168,8 @@ public class Planeta implements Comparable<Planeta> {
 	 */
 
 	public Objednavka vytrorObjednavku() {
-		indexUmrti++;
+		
+		umrti.getPocetObyvatel().add(getPocetObyvatel());
 		if (isRucne()) {
 			vlastniVyroba();
 			Objednavka o = new Objednavka(pocetBaleni, getCentrala(), getNazev(), (int) dobaLetu);
@@ -217,18 +218,15 @@ public class Planeta implements Comparable<Planeta> {
 		try {
 			pw = new PrintWriter(new BufferedWriter(new FileWriter("planety/" + getNazev() + ".txt")));
 
-			pw.println("Planeta: " + getNazev() + "pocatecny pocet obyvatel: " + getPocetObyvatel()
+			pw.println("Planeta: " + getNazev() + " pocatecny pocet obyvatel: " + umrti.getPocatecnyStavObyvatel()
 					+ " zasobovana centralou: " + getCentrala());
-
+			
+		
 			for (int i = 0; i < statistika.size(); i++) {
 				pw.println(statistika.get(i));
 			}
-			try {
-				
-				pw.println("Celkovy pocet vyrobenych a prevezenych leku je: " + statistika.get(0).getCelkovyPocetLeku());
-			} catch (Exception e) {
-				
-			}
+			pw.println("Celkovy pocet vyrobenych a prevezenych leku je: " + s.getCelkovyPocetLeku());
+		
 
 			vypisUmrti(pw);
 

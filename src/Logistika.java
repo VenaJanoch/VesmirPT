@@ -23,7 +23,7 @@ public class Logistika {
 
 	/** Konstanty tridy logistika **/
 	private final int maxNaklad = 5000000;
-	private final int rychlostLodi = 24;
+	private final int rychlostLodi = 25;
 
 	/** staticke promenne tridy Logistika */
 	private static int pomNazev = 10;
@@ -118,7 +118,7 @@ public class Logistika {
 				if (cas.getDen() != planety.get(Integer.parseInt(pom.getObC().getP().get(index + 1).getNazev()))
 						.getDatum()) {
 
-					if (pom.getUrazeno() - 24 < 0) {
+					if (pom.getUrazeno() - 25 < 0) {
 
 						pom.setUrazeno(0);
 
@@ -144,7 +144,7 @@ public class Logistika {
 				} else {
 
 					if (zjistiVzdalenostDoCile(pom.getUrazeno(),
-							pom.getObC().getP().get(index).getVzdalenostOdcentraly()) <= 24) {
+							pom.getObC().getP().get(index).getVzdalenostOdcentraly()) <= 25) {
 
 						pom = mensiVzdalenost(indexDodavky, index, index2, cas, pom, pocetUrazenychMil);
 
@@ -436,16 +436,11 @@ public class Logistika {
 		lod.setObC(c);
 		lod.zjistiDobuCesty();
 
-		String pom = "";
-		for (int i = 0; i < c.getP().size(); i++) {
-			pom += c.getP().get(i).getNazev() + " ";
-		}
-	//	System.out.println(lod + pom);
 		if (lod.getDobaLetu() > 25) {
 			zrusObjednavku(lod.getObC().getP(), lod);
 		}else {
 			
-			lod.getStatistika().getCesta()[lod.getIndex()] = c;
+			lod.getStatistika().getCesta().add(c);
 			lod.getStatistika().getPocetLeku()[lod.getIndex()] = c.getPocetLekuNaCestu();
 			lod.setIndex(mesic);
 			
@@ -467,7 +462,7 @@ public class Logistika {
 			planety.get(index).upravPopulaci(planety.get(index).getObjednavka().getPocetLeku());
 			planety.get(index).setObsluhovan(false);
 			planety.get(index).getStatistika().add(new StatistikaPlaneta(0, pom, 3));
-
+			
 			
 		}
 

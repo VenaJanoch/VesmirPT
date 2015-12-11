@@ -13,6 +13,7 @@ public class StatistikaPlaneta {
 	private int pocetLeku;
 	private Lod lod;
 	private int mesic;
+	
 
 	/**
 	 * Konstruktor tridy ulozi potrebny pocet pro dovezeni lod ktera leky
@@ -27,6 +28,16 @@ public class StatistikaPlaneta {
 		this.setLod(lod);
 		this.setPocetLeku(pocetLeku);
 		this.setMesic(mesic);
+
+	}
+
+	/**
+	 * Konstruktor tridy pokud planeta neni zasobovana zadnou lodi pro
+	 * vzdalenost
+	 * 
+	 * @param s
+	 */
+	public StatistikaPlaneta() {
 
 	}
 
@@ -111,5 +122,6 @@ public class StatistikaPlaneta {
 	public void setMesic(int mesic) {
 		this.mesic = mesic;
 	}
+
 
 }

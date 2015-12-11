@@ -16,6 +16,9 @@ public class Lod implements Comparable<Lod> {
 	/** Konstanta pro urceni maximalni hmotnosti nakladu na lodi */
 	private final int maxNostnost = 5000000;
 
+	/** Staticka promenna tridy*/
+	private static int prepadeniCelkem;
+
 	/** Promenne potrebne pro praci */
 	private String nazev;
 	private ObchodniCesta obC;
@@ -63,6 +66,7 @@ public class Lod implements Comparable<Lod> {
 	 * Zjisti jak dlouho bude trvat let spolecne s nakladkou v vylozenim leku
 	 */
 	public void zjistiDobuCesty() {
+		setPrepadeniCelkem(getPrepadeniCelkem() + prepadeni);
 		int mez = obC.getP().size();
 		double vzdalenost = 0;
 		double vysledek = 0;
@@ -76,7 +80,7 @@ public class Lod implements Comparable<Lod> {
 
 		vzdalenost = vysledek;
 		vysledek += mez + 1;
-		dobaLetu = 2.0*(vysledek / 24.0);
+		dobaLetu = 2.0*(vysledek / 25.0);
 	
 	}
 
@@ -127,7 +131,7 @@ public class Lod implements Comparable<Lod> {
 		try {
 			pw = new PrintWriter(new BufferedWriter(new FileWriter("lode/statistikaLodiCelkem.txt")));
 			pw.println("Celkovy pocet prevezenych leku: " + statistika.getPocetLekuCelkem());
-			pw.println("Celkovy pocet prepadeni: " + statistika.getPocetPrepadeniCelkem());
+			pw.println("Celkovy pocet prepadeni: " + prepadeniCelkem);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -292,6 +296,20 @@ public class Lod implements Comparable<Lod> {
 	 */
 	public void setPrepadeni(int prepadeni) {
 		this.prepadeni = prepadeni;
+	}
+
+	/**
+	 * @return the prepadeniCelkem
+	 */
+	public static int getPrepadeniCelkem() {
+		return prepadeniCelkem;
+	}
+
+	/**
+	 * @param prepadeniCelkem the prepadeniCelkem to set
+	 */
+	public static void setPrepadeniCelkem(int prepadeniCelkem) {
+		Lod.prepadeniCelkem = prepadeniCelkem;
 	}
 
 }

@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -33,7 +33,7 @@ public class Rozdeleni {
 	private int velikostVesmiruX;
 	private int velikostVesmiruY;
 	private int pocetCentral;
-	private ArrayList<Planeta> planety;
+	private List<Planeta> planety;
 
 	/**
 	 * Konstruktor pro praci uz s vygenerovanym vesmirem
@@ -84,13 +84,14 @@ public class Rozdeleni {
 		this.setPocetCentral(pocetCentral);
 		this.planety = new ArrayList<Planeta>();
 
-		prirazeniObyvatel();
+		prirazeniObyvatel(true);
 	}
 
 	/**
 	 * Rozdeleni obyvatel na planety a umisteni planet do vesmiru
+	 * @param opravdu chceme tuto metodu pouzit
 	 */
-	public void prirazeniObyvatel() {
+	public void prirazeniObyvatel(boolean opravdu) {
 		int pocetPlanet = 0;
 		Random r = new Random();
 		Point pozice = new Point(0, 0);
@@ -357,11 +358,11 @@ public class Rozdeleni {
 		this.velikostVesmiruX = velikostVesmiruX;
 	}
 
-	public ArrayList<Planeta> getPlanety() {
+	public List<Planeta> getPlanety() {
 		return planety;
 	}
 
-	public void setPlanety(ArrayList<Planeta> planety) {
+	public void setPlanety(List<Planeta> planety) {
 		this.planety = planety;
 	}
 

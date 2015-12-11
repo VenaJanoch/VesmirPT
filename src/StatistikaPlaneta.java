@@ -39,6 +39,7 @@ public class StatistikaPlaneta {
 	 */
 	public StatistikaPlaneta() {
 
+		/* Konstruktor se pouziva pro pokud planeta neni v dosahu */
 	}
 
 	/**

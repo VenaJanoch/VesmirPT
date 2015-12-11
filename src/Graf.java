@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Graf {
@@ -17,54 +17,56 @@ public class Graf {
 	 */
 	
 	/** Promenne potrebne pro praci */
-	private ArrayList<Planeta> vrcholy;
+	private List<Planeta> vrcholy;
 	private int matice[][];
 	private int velikost;
 	private int maticeVzdalenosti[][];
-	private int dalsi[];
-	private int ohodnocenaHrana;
-
-	/** Instance tridy Scanner pro ceteni dat ze souboru */
-	private Scanner sc;
 
 	/**
 	 * Konstruktor pro nacteni grafu ze souboru
 	 * 
 	 * @param souborMatice
 	 *            soubor ve kterem je ulozeny graf
-	 * @param vrcholy
+	 * @param list
 	 *            jednotlive vrcholy
 	 */
-	public Graf(String souborMatice, ArrayList<Planeta> vrcholy) {
-		setVrcholy(vrcholy);
-		setVelikost(vrcholy.size());
+	public Graf(String souborMatice, List<Planeta> list) {
+		setVrcholy(list);
+		setVelikost(list.size());
 		setMatice(new int[velikost][velikost]);
 		maticeVzdalenosti = new int[velikost][velikost];
 
 		nactiGraf(souborMatice);
-		najdiVzdalenosti();
-		najdiSousedy();
-
-		dalsi = new int[velikost];
+		projdiGraf(1);
 	}
 
+	
 	/**
 	 * Kontruktor tridy pro vygenerovani grafu do souboru
 	 * 
-	 * @param vrcholy
+	 * @param list
 	 *            jenotlive planety
 	 */
-	public Graf(ArrayList<Planeta> vrcholy) {
+	public Graf(List<Planeta> list) {
 
-		setVrcholy(vrcholy);
-		setVelikost(vrcholy.size());
+		setVrcholy(list);
+		setVelikost(list.size());
 		setMatice(new int[velikost][velikost]);
 		maticeVzdalenosti = new int[velikost][velikost];
 
+		projdiGraf(1);
+		
+	}
+	
+	/**
+	 * Pomocna metoda pro prochazeni grafu 
+	 * @param i nahodnecislo
+	 */
+	public void projdiGraf(int i){
 		najdiVzdalenosti();
-
 		najdiSousedy();
 	}
+
 
 	/**
 	 * Vytvori matici vzdalenosti kde jsou ulozeny jednotlive vzdalenosti mezi
@@ -167,13 +169,12 @@ public class Graf {
 	public void nactiGraf(String nazevSouboru) {
 		File f = new File(nazevSouboru);
 		try {
-			sc = new Scanner(f);
+			Scanner sc = new Scanner(f);
 
 			String pomString;
 			String[] parametry;
 			int velikost;
-			int radek = 0;
-
+			
 			while (sc.hasNextLine()) {
 
 				pomString = sc.nextLine();
@@ -262,14 +263,14 @@ public class Graf {
 	/*
 	 * @return
 	 */
-	public ArrayList<Planeta> getVrcholy() {
+	public List<Planeta> getVrcholy() {
 		return vrcholy;
 	}
 
 	/**
 	 * @param vrcholy
 	 */
-	public void setVrcholy(ArrayList<Planeta> vrcholy) {
+	public void setVrcholy(List<Planeta> vrcholy) {
 		this.vrcholy = vrcholy;
 	}
 

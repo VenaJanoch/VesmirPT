@@ -26,6 +26,7 @@ public class Usek {
 		this.setCil(cil);
 		this.setVzdalenost(vzdalenost);
 		this.setPocatek(pocatek);
+		this.setNebezpecny(nebezpecny);
 	}
 
 	/**

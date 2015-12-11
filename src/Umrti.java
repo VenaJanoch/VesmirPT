@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Umrti {
 	
@@ -16,9 +17,9 @@ public class Umrti {
 
 	/** Promenne potrebne pro praci */
 	private String planeta;
-	private ArrayList<Integer> pocetObyvatel;
+	private List<Integer> pocetObyvatel;
 
-	public void setPocetObyvatel(ArrayList<Integer> pocetObyvatel) {
+	public void setPocetObyvatel(List<Integer> pocetObyvatel) {
 		this.pocetObyvatel = pocetObyvatel;
 	}
 
@@ -109,7 +110,7 @@ public class Umrti {
 	/**
 	 * @return the pocetObyvatel
 	 */
-	public ArrayList<Integer> getPocetObyvatel() {
+	public List<Integer> getPocetObyvatel() {
 		return pocetObyvatel;
 	}
 

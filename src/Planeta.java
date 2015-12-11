@@ -1,10 +1,10 @@
 import java.awt.Point;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Planeta implements Comparable<Planeta> {
@@ -19,8 +19,8 @@ public class Planeta implements Comparable<Planeta> {
 	private String nazev;
 	private int pocetObyvatel;
 	private Point poloha;
-	private ArrayList<Planeta> partneri;
-	private ArrayList<Usek> useky;
+	private List<Planeta> partneri;
+	private List<Usek> useky;
 	private String centrala;
 
 	/** Promenne potrebne pro objednavku */
@@ -32,7 +32,7 @@ public class Planeta implements Comparable<Planeta> {
 	private Objednavka objednavka;
 
 	/** Promenne potrebne pro statistiku */
-	private ArrayList<StatistikaPlaneta> statistika;
+	private List<StatistikaPlaneta> statistika;
 	private StatistikaPlaneta s;
 	private Umrti umrti;
 	private boolean obsluhovan;
@@ -48,7 +48,7 @@ public class Planeta implements Comparable<Planeta> {
 	private Lod lod;
 
 	/** Instance trid */
-	private Random r = new Random();
+	private Random r;
 	private PrintWriter pw;
 
 	/**
@@ -72,6 +72,7 @@ public class Planeta implements Comparable<Planeta> {
 		this.setStatistika(new ArrayList<StatistikaPlaneta>());
 		this.setUmrti(new Umrti(getNazev(), getPocetObyvatel()));
 
+		r = new Random();
 	}
 
 	/**
@@ -151,12 +152,13 @@ public class Planeta implements Comparable<Planeta> {
 	 * @return popis planety
 	 */
 	public String jePopulace() {
+		
 		if (getPocetObyvatel() < 40000) {
 			setNizkyPocet(true);
 			return "Planeta " + nazev + " je pod normou obyvatel a je ignorovana";
 		}
 		String popis = "Planeta " + nazev + " pocet obyvatel " + pocetObyvatel + " je zasobovana z " + getCentrala()
-				+ " centraly, poctem leku " + objednavka.getPocetLeku() + " za " + spoctiCasLetu() + " dnu";
+				+ " centraly, poctem leku " + objednavka.getPocetLeku() + " za " + spoctiCasLetu();
 
 		return popis;
 	}
@@ -259,7 +261,7 @@ public class Planeta implements Comparable<Planeta> {
 	 * 
 	 * @param planety
 	 */
-	public void vypisUmrtiCele(ArrayList<Planeta> planety) {
+	public void vypisUmrtiCele(List<Planeta> planety) {
 
 		try {
 			pw = new PrintWriter(new BufferedWriter(new FileWriter("umrti/umrti.cvs")));
@@ -347,11 +349,11 @@ public class Planeta implements Comparable<Planeta> {
 		this.poloha = poloha;
 	}
 
-	public ArrayList<Planeta> getPartneri() {
+	public List<Planeta> getPartneri() {
 		return partneri;
 	}
 
-	public void setPartneri(ArrayList<Planeta> partneri) {
+	public void setPartneri(List<Planeta> partneri) {
 		this.partneri = partneri;
 	}
 
@@ -493,7 +495,7 @@ public class Planeta implements Comparable<Planeta> {
 	/**
 	 * @return the useky
 	 */
-	public ArrayList<Usek> getUseky() {
+	public List<Usek> getUseky() {
 		return useky;
 	}
 
@@ -501,7 +503,7 @@ public class Planeta implements Comparable<Planeta> {
 	 * @param useky
 	 *            the useky to set
 	 */
-	public void setUseky(ArrayList<Usek> useky) {
+	public void setUseky(List<Usek> useky) {
 		this.useky = useky;
 	}
 
@@ -553,7 +555,7 @@ public class Planeta implements Comparable<Planeta> {
 	/**
 	 * @return the statistika
 	 */
-	public ArrayList<StatistikaPlaneta> getStatistika() {
+	public List<StatistikaPlaneta> getStatistika() {
 		return statistika;
 	}
 
@@ -561,7 +563,7 @@ public class Planeta implements Comparable<Planeta> {
 	 * @param statistika
 	 *            the statistika to set
 	 */
-	public void setStatistika(ArrayList<StatistikaPlaneta> statistika) {
+	public void setStatistika(List<StatistikaPlaneta> statistika) {
 		this.statistika = statistika;
 	}
 
@@ -594,5 +596,34 @@ public class Planeta implements Comparable<Planeta> {
 	public void setUmrti(Umrti umrti) {
 		this.umrti = umrti;
 	}
+
+	/**
+	 * @return the s
+	 */
+	public StatistikaPlaneta getS() {
+		return s;
+	}
+
+	/**
+	 * @param s the s to set
+	 */
+	public void setS(StatistikaPlaneta s) {
+		this.s = s;
+	}
+
+	/**
+	 * @return the r
+	 */
+	public Random getR() {
+		return r;
+	}
+
+	/**
+	 * @param r the r to set
+	 */
+	public void setR(Random r) {
+		this.r = r;
+	}
+	
 
 }

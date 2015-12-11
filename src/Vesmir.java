@@ -1,10 +1,8 @@
-import java.io.File;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
-
-import com.sun.corba.se.impl.oa.poa.POACurrent;
 
 public class Vesmir {
 
@@ -19,12 +17,8 @@ public class Vesmir {
 	private Rozdeleni r;
 	private Graf g;
 	private Logistika l;
+	private DopravniSit DopS;
 	private Scanner sc;
-
-	/** Promenne pro vytvareni vesmiru */
-	private String souborPlaneta;
-	private String souborMatice;
-	private String souborCentrala;
 
 	/** Promenne potrebne pro zadavani rucne */
 	private int volba;
@@ -32,7 +26,7 @@ public class Vesmir {
 	private int planeta;
 	private int lod;
 	private static Lod lodO;
-	private ArrayList<Integer> planetyRucne = new ArrayList<Integer>();
+	private List<Integer> planetyRucne = new ArrayList<Integer>();
 
 	/**
 	 * Metoda pro rozhodovani zda pujde o generaci dat nebo chod simulace
@@ -74,9 +68,9 @@ public class Vesmir {
 	 */
 	public void nactiData(String args[]) {
 
-		souborPlaneta = args[1];
-		souborMatice = args[3];
-		souborCentrala = args[2];
+		String souborPlaneta = args[1];
+		String souborMatice = args[3];
+		String souborCentrala = args[2];
 
 		r = new Rozdeleni(souborPlaneta, souborCentrala);
 		g = new Graf(souborMatice, r.getPlanety());
@@ -109,15 +103,15 @@ public class Vesmir {
 	 * Metoda pro rizeni simulace podle volby uzivatele
 	 */
 	public void rizeni() {
-		int volba = 0;
+		
 		sc = new Scanner(System.in);
 		System.out.println("Pozadujete rucni zadavani? Stisknete 1, pokud ne stisknete 2");
 		switch (sc.nextInt()) {
 		case 1:
-			seZadanim();
+			beh(true);
 			break;
 		case 2:
-			bezZadani();
+			beh();
 			break;
 
 		default:
@@ -129,9 +123,10 @@ public class Vesmir {
 	/**
 	 * Metoda pro simulaci se zadavanim uzivatele
 	 */
-	public void seZadanim() {
+	public void beh(boolean rucne) {
 		sc = new Scanner(System.in);
-		l = new Logistika(r.getPlanety(), g);
+		DopS = new DopravniSit((ArrayList<Planeta>) r.getPlanety(), g);
+		l = new Logistika(DopS.getPlanety());
 		int i = 0;
 
 		while (i != 372) {
@@ -150,7 +145,8 @@ public class Vesmir {
 				}
 
 				l.prijmiObjednavky();
-				l.setPlanetyPodleVzdalenosti((ArrayList<Planeta>) l.getPlanety().clone());
+				l.setPlanetyPodleVzdalenosti((List<Planeta>) (  (ArrayList<Planeta>) l.getPlanety()).clone());
+				
 				Collections.sort(l.getPlanetyPodleVzdalenosti());
 				l.vypravLode();
 
@@ -173,9 +169,9 @@ public class Vesmir {
 	/**
 	 * Metoda pro simulaci bez zadavani uzivatele
 	 */
-	public void bezZadani() {
-
-		l = new Logistika(r.getPlanety(), g);
+	public void beh() {
+		DopS = new DopravniSit((ArrayList<Planeta>) r.getPlanety(), g);
+		l = new Logistika(DopS.getPlanety());
 		int i = 0;
 
 		while (i != 372) {
@@ -185,16 +181,12 @@ public class Vesmir {
 				c.nastavDen(i);
 				System.out.println(c);
 				l.prijmiObjednavky();
-				l.setPlanetyPodleVzdalenosti((ArrayList<Planeta>) l.getPlanety().clone());
+				l.setPlanetyPodleVzdalenosti((List<Planeta>) (  (ArrayList<Planeta>) l.getPlanety()).clone());
 				Collections.sort(l.getPlanetyPodleVzdalenosti());
 				l.vypravLode();
 
 			} else if(i%31 != 0) {
 				c.nastavDen(i);
-				if (c.getDen() == 30) {
-					//System.out.println(l.getSeznamLodiVolne().size() + " volne");
-					//System.out.println(l.getSeznamLodiZabrane().size() + " zabrane");
-				}
 				l.dopravZbozi(c);
 				
 			}
@@ -237,7 +229,7 @@ public class Vesmir {
 	 * @param volba
 	 *            volba uzivatele ziskane z konzole
 	 */
-	public void volby(int volba) {
+	public void volby(int volba3) {
 
 		switch (volba) {
 		case 2:
@@ -319,7 +311,7 @@ public class Vesmir {
 
 	public void sledujPlanetu(int planeta) {
 		System.out.println(c);
-		System.out.print(l.getPlanety().get(planeta) + " lod: ");
+		System.out.println(l.getPlanety().get(planeta));
 		//System.out.println(l.getPlanety().get(planeta).getLod());
 		
 	}
@@ -346,14 +338,12 @@ public class Vesmir {
 			l.getPlanety().get(i).vypisStatistiku();
 		}
 
-		l.getPlanety().get(0).vypisUmrtiCele(l.getPlanety());
+		l.getPlanety().get(0).vypisUmrtiCele((ArrayList<Planeta>) l.getPlanety());
 		
 		for (int i = 0; i < l.getSeznamLodiVolne().size(); i++) {
 		 l.getSeznamLodiVolne().get(i).vypisLod();
 		 }
-	//	l.getSeznamLodiVolne().get(0).getStatistika().setPocetLekuCelkem(l.getSeznamLodiVolne().get(0).getPrepadeniCelkem());
-	//	System.out.println(l.getSeznamLodiVolne().get(0).getPrepadeniCelkem());
-		l.getSeznamLodiVolne().get(0).vypisLodCelkem();
+			l.getSeznamLodiVolne().get(0).vypisLodCelkem();
 		
 	}
 
@@ -387,6 +377,20 @@ public class Vesmir {
 	 */
 	public void setC(Cas c) {
 		this.c = c;
+	}
+	
+	/**
+	 * @return the planetyRucne
+	 */
+	public List<Integer> getPlanetyRucne() {
+		return planetyRucne;
+	}
+
+	/**
+	 * @param planetyRucne the planetyRucne to set
+	 */
+	public void setPlanetyRucne(List<Integer> planetyRucne) {
+		this.planetyRucne = planetyRucne;
 	}
 
 }

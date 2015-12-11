@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.List;
 
 public class Cesta {
 	/***
@@ -7,8 +7,8 @@ public class Cesta {
 	 * 
 	 */
 	/** Promenne potrebne pro praci */
-	private ArrayList<Integer> planety;
-	private ArrayList<Usek> useky;
+	private List<Integer> planety;
+	private List<Usek> useky;
 	private int vzdalenos;
 	private boolean nebezpecna;
 
@@ -20,7 +20,7 @@ public class Cesta {
 	 * @param vdalenost
 	 * @param celkovyPocetLeku
 	 */
-	public Cesta(ArrayList<Usek> useky, ArrayList<Integer> planety) {
+	public Cesta(List<Usek> useky, List<Integer> planety) {
 		this.planety = planety;
 		this.setUseky(useky);
 
@@ -35,11 +35,11 @@ public class Cesta {
 		this.vzdalenos = vzdalenos;
 	}
 
-	public ArrayList<Integer> getPlanety() {
+	public List<Integer> getPlanety() {
 		return planety;
 	}
 
-	public void setPlanety(ArrayList<Integer> planety) {
+	public void setPlanety(List<Integer> planety) {
 		this.planety = planety;
 	}
 
@@ -61,7 +61,7 @@ public class Cesta {
 	/**
 	 * @return the useky
 	 */
-	public ArrayList<Usek> getUseky() {
+	public List<Usek> getUseky() {
 		return useky;
 	}
 
@@ -69,7 +69,7 @@ public class Cesta {
 	 * @param useky
 	 *            the useky to set
 	 */
-	public void setUseky(ArrayList<Usek> useky) {
+	public void setUseky(List<Usek> useky) {
 		this.useky = useky;
 	}
 
